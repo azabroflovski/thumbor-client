@@ -1,5 +1,6 @@
+import { Thumbor } from './thumbor.ts'
 import { ThumborClientOptions } from './types.ts'
 
 export function createThumbor(options: ThumborClientOptions) {
-    // TODO: here thumbor instance creating
+    return new Thumbor(options)
 }
