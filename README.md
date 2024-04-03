@@ -38,7 +38,8 @@ const imgUrl = thumbor
     .resize(300, 200)
     .buildURL()
 
-console.log(imageUrl) // https://your-thumbor.com/unsafe/300x200/smart/https://cataas.com/cat
+console.log(imageUrl) 
+// https://your-thumbor.com/unsafe/300x200/smart/https://cataas.com/cat
 ```
 
 ## LICENSE
