@@ -28,15 +28,17 @@ $ npm i thumbor-client
 import { createThumbor } from 'thumbor-client'
 
 const thumbor = createThumbor({
-    url: 'https://url-to-thumbor.com',
+    url: 'https://your-thumbor.com',
     key: 'secret'
 })
 
 const imgUrl = thumbor
-    .fromUrl('https://somesite.com/cat.jpeg')
+    .fromUrl('https://cataas.com/cat')
     .smartCrop(true)
-    .resize(500, 0)
+    .resize(300, 200)
     .buildURL()
+
+console.log(imageUrl) // https://your-thumbor.com/unsafe/300x200/smart/https://cataas.com/cat
 ```
 
 ## LICENSE
