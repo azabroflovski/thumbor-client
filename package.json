@@ -24,11 +24,12 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/thumbor-client.umd.cjs",
-  "module": "./dist/thumbor-client.es.js",
+  "types": "./dist/main.d.ts",
+  "main": "./dist/thumbor-client.js",
+  "module": "./dist/thumbor-client.js",
   "exports": {
     ".": {
-      "import": "./dist/thumbor-client.es.js",
+      "import": "./dist/thumbor-client.js",
       "require": "./dist/thumbor-client.cjs"
     }
   },
