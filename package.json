@@ -4,6 +4,15 @@
   "version": "0.0.1",
   "type": "module",
   "author": "azabroflovski",
+  "keywords": [
+    "thumbor",
+    "thumbor client",
+    "thumbor typescript",
+    "thumbor typescript client",
+    "thumbor browser",
+    "thumbor node",
+    "thumbor node typescript"
+  ],
   "files": [
     "dist"
   ],
