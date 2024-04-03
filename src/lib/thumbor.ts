@@ -27,6 +27,11 @@ export class Thumbor {
         }
     }
 
+    fromUrl(url: string) {
+        this.parameters.imagePath = url
+        return this
+    }
+
     setPath(path: string) {
         this.parameters.imagePath = (path.startsWith('/')) ? path.slice(1, path.length) : path
 
@@ -40,7 +45,7 @@ export class Thumbor {
         return this
     }
 
-    smartCrop(smartCrop: boolean) {
+    smartCrop(smartCrop: boolean = true) {
         this.parameters.smart = smartCrop
         return this
     }
