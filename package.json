@@ -25,12 +25,13 @@
     "dist"
   ],
   "types": "./dist/main.d.ts",
-  "main": "./dist/thumbor-client.js",
+  "main": "./dist/thumbor-client.umd.cjs",
   "module": "./dist/thumbor-client.js",
   "exports": {
     ".": {
+      "types": "./dist/main.d.ts",
       "import": "./dist/thumbor-client.js",
-      "require": "./dist/thumbor-client.cjs"
+      "require": "./dist/thumbor-client.umd.cjs"
     }
   },
   "scripts": {
