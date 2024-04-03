@@ -1,1 +1,1 @@
-import './style.css'
+export * from './lib/index.ts'

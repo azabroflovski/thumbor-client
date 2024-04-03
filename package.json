@@ -1,8 +1,20 @@
 {
   "name": "thumbor-client",
   "private": false,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
+  "author": "azabroflovski",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/thumbor-client.umd.cjs",
+  "module": "./dist/thumbor-client.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/thumbor-client.es.js",
+      "require": "./dist/thumbor-client.cjs"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -11,6 +23,7 @@
   "devDependencies": {
     "@types/node": "^20.12.2",
     "typescript": "^5.2.2",
-    "vite": "^5.2.0"
+    "vite": "^5.2.0",
+    "vite-plugin-dts": "^3.8.1"
   }
 }
