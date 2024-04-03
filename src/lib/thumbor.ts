@@ -1,20 +1,31 @@
 import crypto from 'crypto'
 import { isDefined } from '../helpers'
-import {Parameters, ThumborClientOptions, WindowSizeAndPosition} from './types.ts'
+import { Parameters, ThumborClientOptions, WindowSizeAndPosition } from './types.ts'
 import { FitInType, HorizontalPosition, VerticalPosition } from './enums.ts'
 
+/**
+ * Class representing a Thumbor client for generating image URLs.
+ */
 export class Thumbor {
     private readonly url: string
     private readonly key?: string
-
     private parameters: Parameters = this.defaultParameters()
 
-    constructor({url, key}: ThumborClientOptions) {
+    /**
+     * Constructs a new Thumbor instance.
+     * @param url The URL of the Thumbor server.
+     * @param key Optional security key for accessing the Thumbor server.
+     */
+    constructor({ url, key }: ThumborClientOptions) {
         this.url = url
         this.key = key
     }
 
-    defaultParameters(): Parameters {
+    /**
+     * Creates default parameters.
+     * @returns Default parameters object.
+     */
+    public defaultParameters(): Parameters {
         return {
             imagePath: '',
             width: 0,
@@ -27,74 +38,136 @@ export class Thumbor {
         }
     }
 
-    fromUrl(url: string) {
+    /**
+     * Sets the image path from a URL.
+     * @param url The URL of the image.
+     * @returns The Thumbor instance.
+     */
+    public fromUrl(url: string) {
         this.parameters.imagePath = url
         return this
     }
 
-    setPath(path: string) {
+    /**
+     * Sets the path of the image.
+     * @param path The path of the image.
+     * @returns The Thumbor instance.
+     */
+    public setPath(path: string) {
         this.parameters.imagePath = (path.startsWith('/')) ? path.slice(1, path.length) : path
-
         return this
     }
 
-    resize(width: Parameters['width'], height: Parameters['height']) {
+    /**
+     * Resizes the image.
+     * @param width The width of the image.
+     * @param height The height of the image.
+     * @returns The Thumbor instance.
+     */
+    public resize(width: Parameters['width'], height: Parameters['height']) {
         this.parameters.width = width
         this.parameters.height = height
         this.parameters.fitInType = undefined
         return this
     }
 
-    smartCrop(smartCrop: boolean = true) {
+    /**
+     * Sets smart cropping flag.
+     * @param smartCrop Flag indicating whether to use smart cropping.
+     * @returns The Thumbor instance.
+     */
+    public smartCrop(smartCrop: boolean = true) {
         this.parameters.smart = smartCrop
         return this
     }
 
-    trim() {
+    /**
+     * Sets trim flag.
+     * @returns The Thumbor instance.
+     */
+    public trim() {
         this.parameters.trimFlag = true
         return this
     }
 
-    fitIn(width: number, height: number, type = FitInType.DEFAULT) {
+    /**
+     * Sets fit-in parameters.
+     * @param width The width to fit in.
+     * @param height The height to fit in.
+     * @param type The fitting type.
+     * @returns The Thumbor instance.
+     */
+    public fitIn(width: number, height: number, type = FitInType.DEFAULT) {
         this.parameters.width = width
         this.parameters.height = height
         this.parameters.fitInType = type
         return this
     }
 
-    flipHorizontally() {
+    /**
+     * Flips the image horizontally.
+     * @returns The Thumbor instance.
+     */
+    public flipHorizontally() {
         this.parameters.withFlipHorizontally = true
         return this
     }
 
-    flipVertically() {
+    /**
+     * Flips the image vertically.
+     * @returns The Thumbor instance.
+     */
+    public flipVertically() {
         this.parameters.withFlipVertically = true
         return this
     }
 
-    halign(halign: HorizontalPosition) {
+    /**
+     * Sets horizontal alignment.
+     * @param halign The horizontal alignment value.
+     * @returns The Thumbor instance.
+     */
+    public halign(halign: HorizontalPosition) {
         this.parameters.halignValue = halign
         return this
     }
 
-    valign(valign: VerticalPosition) {
+    /**
+     * Sets vertical alignment.
+     * @param valign The vertical alignment value.
+     * @returns The Thumbor instance.
+     */
+    public valign(valign: VerticalPosition) {
         this.parameters.valignValue = valign
         return this
     }
 
-    filter(filterCall: string) {
+    /**
+     * Adds a filter call for image processing.
+     * @param filterCall The filter call.
+     * @returns The Thumbor instance.
+     */
+    public filter(filterCall: string) {
         this.parameters.filtersCalls.push(filterCall)
         return this
     }
 
-    crop(crop: WindowSizeAndPosition) {
+    /**
+     * Sets crop values for the image.
+     * @param crop The crop values.
+     * @returns The Thumbor instance.
+     */
+    public crop(crop: WindowSizeAndPosition) {
         this.parameters.cropValues = crop
         return this
     }
 
-    buildURL() {
+    /**
+     * Builds the URL for the image with applied operations.
+     * @returns The generated image URL.
+     */
+    public buildURL() {
         const operation = this.getOperationPath()
-
         const dataToEncrypt = operation + '/' + this.parameters.imagePath
 
         if (this.key) {
@@ -114,6 +187,10 @@ export class Thumbor {
         return this.url + '/unsafe/' + dataToEncrypt
     }
 
+    /**
+     * Constructs URL parts based on parameters.
+     * @returns Array of URL parts.
+     */
     private getURLParts() {
         const parts = []
 
@@ -188,6 +265,10 @@ export class Thumbor {
         return parts
     }
 
+    /**
+     * Constructs the operation path for the URL.
+     * @returns The constructed operation path.
+     */
     private getOperationPath() {
         const parts = this.getURLParts()
 
