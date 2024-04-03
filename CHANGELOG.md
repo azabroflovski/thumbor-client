@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.0.3
+
+[compare changes](https://github.com/azabroflovski/thumbor-client/compare/v0.0.2...v0.0.3)
+
+### 🩹 Fixes
+
+- Library building (types issue) ([b9f3fa4](https://github.com/azabroflovski/thumbor-client/commit/b9f3fa4))
+
+### 📖 Documentation
+
+- **readme:** More readable console.log output (in exmample) ([fd28a61](https://github.com/azabroflovski/thumbor-client/commit/fd28a61))
+
+### ❤️ Contributors
+
+- Azabroflovski <azabroflovski@gmail.com>
+
 ## v0.0.2
 
 [compare changes](https://github.com/azabroflovski/thumbor-client/compare/v0.0.1...v0.0.2)
