@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.0.2
+
+[compare changes](https://github.com/azabroflovski/thumbor-client/compare/v0.0.1...v0.0.2)
+
+### 🏡 Chore
+
+- Add changelog ([8ef5840](https://github.com/azabroflovski/thumbor-client/commit/8ef5840))
+- **package:** Add keywords ([90e99fb](https://github.com/azabroflovski/thumbor-client/commit/90e99fb))
+- **package:** Add github information ([e1cb467](https://github.com/azabroflovski/thumbor-client/commit/e1cb467))
+
+### ❤️ Contributors
+
+- azabroflovski <azabroflovski@gmail.com>
+
 ## v0.0.1
 
 ### 🚀 Enhancements
