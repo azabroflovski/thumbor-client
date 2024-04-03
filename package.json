@@ -4,6 +4,14 @@
   "version": "0.0.1",
   "type": "module",
   "author": "azabroflovski",
+  "homepage": "https://github.com/azabroflovski/thumbor-client",
+  "bugs": {
+    "url": "https://github.com/azabroflovski/thumbor-client/issues"
+  },
+  "repository": {
+    "url": "https://github.com/azabroflovski/thumbor-client",
+    "type": "git"
+  },
   "keywords": [
     "thumbor",
     "thumbor client",
