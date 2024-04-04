@@ -1,5 +1,17 @@
 # Changelog
 
+## vv0.0.6
+
+[compare changes](https://github.com/azabroflovski/thumbor-client/compare/v0.0.5...vv0.0.6)
+
+### 🩹 Fixes
+
+- **package:** Remove .ts from export (export not visible issue) ([0908103](https://github.com/azabroflovski/thumbor-client/commit/0908103))
+
+### ❤️ Contributors
+
+- Azabroflovski <azabroflovski@gmail.com>
+
 ## vv0.0.5
 
 [compare changes](https://github.com/azabroflovski/thumbor-client/compare/v0.0.4...vv0.0.5)
