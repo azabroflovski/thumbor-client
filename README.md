@@ -2,24 +2,15 @@
 
 A simple and efficient Thumbor client for TypeScript/JavaScript (works on node and browser).
 
-Package designed to simplify working with Thumbor. 
-It allows you to easily make requests to the Thumbor API, generate image URLs 
-with various transformation parameters, and get information about the Thumbor server status.
-
-## Features
-
-- Simple interface: Thumbor-TS provides a simple and intuitive interface for working with the Thumbor API. You don't need to know the details of the API to use Thumbor-TS.
-- Image URL generation: Thumbor-TS allows you to easily generate image URLs with various transformation parameters, such as size, scaling, cropping, filters, and more.
-- Status information retrieval: Thumbor-TS allows you to get information about the Thumbor server status, such as uptime, number of processed requests, and more.
-- TypeScript support: Thumbor-TS is written in TypeScript, which ensures reliability, typing, and ease of use.
-- Easy installation: Thumbor-TS can be easily installed using npm.
 
 ## Installation
 
-via npm
-
 ```
+# via npm
 $ npm i thumbor-client
+
+# via bun
+$ bun add thumbor-client
 ```
 
 ## Simple usage
@@ -49,7 +40,7 @@ You can use `thumbor-client` from a CDN via a script tag:
 <script src="https://unpkg.com/thumbor-client/dist/thumbor-client.js"></script>
 ```
 
-Here we are using `unpkg`, but you can also use any CDN that serves npm packages, for example `jsdelivr` or `cdnjs`. 
+Here we are using `unpkg`, but you can also use any CDN that serves npm packages, for example `jsdelivr` or `cdnjs`.
 Of course, you can also download this file and serve it yourself.
 
 When using `thumbor-client` from a CDN, there is no "build step" (bundler) involved. This makes the setup a lot simpler,
@@ -121,4 +112,4 @@ We can teach the browser where to locate the `thumbor-client` import by using Im
 MIT
 
 ## Copyright
-&copy; 2024 azabroflovski
+&copy; 2023 azabroflovski
