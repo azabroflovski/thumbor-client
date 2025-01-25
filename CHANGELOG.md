@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.0.7
+
+[compare changes](https://github.com/azabroflovski/thumbor-client/compare/v0.0.6...v0.0.7)
+
+### 📖 Documentation
+
+- Improve usage examples (add cdn example) ([fa9f598](https://github.com/azabroflovski/thumbor-client/commit/fa9f598))
+
+### 🏡 Chore
+
+- Migrate to bun (for dev) ([dde2717](https://github.com/azabroflovski/thumbor-client/commit/dde2717))
+- Update readme ([9b930cb](https://github.com/azabroflovski/thumbor-client/commit/9b930cb))
+
+### ❤️ Contributors
+
+- azabroflovski <azabroflovski@gmail.com>
+
 ## vv0.0.6
 
 [compare changes](https://github.com/azabroflovski/thumbor-client/compare/v0.0.5...vv0.0.6)
@@ -10,9 +27,9 @@
 
 ### ❤️ Contributors
 
-- Azabroflovski <azabroflovski@gmail.com>
+- azabroflovski <azabroflovski@gmail.com>
 
-## vv0.0.5
+## v0.0.5
 
 [compare changes](https://github.com/azabroflovski/thumbor-client/compare/v0.0.4...vv0.0.5)
 
@@ -22,7 +39,7 @@
 
 ### ❤️ Contributors
 
-- Azabroflovski <azabroflovski@gmail.com>
+- azabroflovski <azabroflovski@gmail.com>
 
 ## v0.0.4
 
@@ -38,7 +55,7 @@
 
 ### ❤️ Contributors
 
-- Azabroflovski <azabroflovski@gmail.com>
+- azabroflovski <azabroflovski@gmail.com>
 
 ## v0.0.3
 
@@ -54,7 +71,7 @@
 
 ### ❤️ Contributors
 
-- Azabroflovski <azabroflovski@gmail.com>
+- azabroflovski <azabroflovski@gmail.com>
 
 ## v0.0.2
 
