@@ -1,6 +1,6 @@
 # thumbor-client
 
-A simple and efficient Thumbor client for TypeScript/JavaScript (works on node and browser).
+A simple and efficient [Thumbor](https://www.thumbor.org/) client for TypeScript/JavaScript (works on node and browser).
 
 ## Installation
 
