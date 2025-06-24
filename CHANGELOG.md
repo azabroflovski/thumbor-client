@@ -1,5 +1,32 @@
 # Changelog
 
+## v0.0.7
+
+[compare changes](https://github.com/azabroflovski/thumbor-client/compare/v0.0.6...v0.0.7)
+
+### 🩹 Fixes
+
+- Make crypto external module ([719a7d9](https://github.com/azabroflovski/thumbor-client/commit/719a7d9))
+
+### 📖 Documentation
+
+- Improve usage examples (add cdn example) ([fa9f598](https://github.com/azabroflovski/thumbor-client/commit/fa9f598))
+- **readme:** Remove doube v letter ([4fc9c41](https://github.com/azabroflovski/thumbor-client/commit/4fc9c41))
+- **readme:** Reformat file ([72f166e](https://github.com/azabroflovski/thumbor-client/commit/72f166e))
+
+### 🏡 Chore
+
+- Migrate to bun (for dev) ([dde2717](https://github.com/azabroflovski/thumbor-client/commit/dde2717))
+- Update readme ([9b930cb](https://github.com/azabroflovski/thumbor-client/commit/9b930cb))
+
+### 🎨 Styles
+
+- Reformat code via linter ([68cacc2](https://github.com/azabroflovski/thumbor-client/commit/68cacc2))
+
+### ❤️ Contributors
+
+- azabroflovski <azabroflovski@gmail.com>
+
 ## v0.0.6
 
 [compare changes](https://github.com/azabroflovski/thumbor-client/compare/v0.0.5...vv0.0.6)
