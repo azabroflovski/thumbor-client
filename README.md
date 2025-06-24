@@ -2,12 +2,14 @@
 
 A simple and efficient Thumbor client for TypeScript/JavaScript (works on node and browser).
 
-
 ## Installation
 
 ```
 # via npm
 $ npm i thumbor-client
+
+# via yarn
+$ yarn add thumbor-client
 
 # via bun
 $ bun add thumbor-client
@@ -34,6 +36,7 @@ console.log(imageUrl)
 ```
 
 ## Using from CDN
+
 You can use `thumbor-client` from a CDN via a script tag:
 
 ```html
@@ -47,7 +50,8 @@ When using `thumbor-client` from a CDN, there is no "build step" (bundler) invol
 and is suitable for enhancing static HTML or integrating with a backend framework. However, you won't be able to use frameworks.
 
 ## Using the ES Module Build
-Throughout the rest of the documentation, we will be primarily using ES modules syntax. 
+
+Throughout the rest of the documentation, we will be primarily using ES modules syntax.
 Most modern browsers now support ES modules natively, so we can use `thumbor-client` from a CDN via native ES modules like this:
 
 ```html
@@ -71,6 +75,7 @@ Most modern browsers now support ES modules natively, so we can use `thumbor-cli
 ```
 
 ### Enabling Import maps
+
 In the above example, we are importing from the full CDN URL, but in the rest of the documentation you will see code like this:
 
 ```js
@@ -112,4 +117,5 @@ We can teach the browser where to locate the `thumbor-client` import by using Im
 MIT
 
 ## Copyright
+
 &copy; 2023 azabroflovski
