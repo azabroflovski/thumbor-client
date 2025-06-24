@@ -7,5 +7,5 @@ import { ThumborClientOptions } from './types.ts'
  * @returns A new instance of Thumbor.
  */
 export function createThumbor(options: ThumborClientOptions) {
-    return new Thumbor(options)
+  return new Thumbor(options)
 }
