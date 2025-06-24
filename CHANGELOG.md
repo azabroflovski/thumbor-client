@@ -1,6 +1,6 @@
 # Changelog
 
-## vv0.0.6
+## v0.0.6
 
 [compare changes](https://github.com/azabroflovski/thumbor-client/compare/v0.0.5...vv0.0.6)
 
@@ -10,9 +10,9 @@
 
 ### ❤️ Contributors
 
-- Azabroflovski <azabroflovski@gmail.com>
+- azabroflovski <azabroflovski@gmail.com>
 
-## vv0.0.5
+## v0.0.5
 
 [compare changes](https://github.com/azabroflovski/thumbor-client/compare/v0.0.4...vv0.0.5)
 
@@ -22,7 +22,7 @@
 
 ### ❤️ Contributors
 
-- Azabroflovski <azabroflovski@gmail.com>
+- azabroflovski <azabroflovski@gmail.com>
 
 ## v0.0.4
 
@@ -100,4 +100,3 @@
 ### ❤️ Contributors
 
 - azabroflovski <azabroflovski@gmail.com>
-
