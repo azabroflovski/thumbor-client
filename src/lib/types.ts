@@ -1,4 +1,4 @@
-import { FitInType, HorizontalPosition, VerticalPosition } from './enums.ts'
+import type { FitInType, HorizontalPosition, VerticalPosition } from './enums.ts'
 
 /**
  * Interface representing options for the Thumbor client.
@@ -43,7 +43,7 @@ export interface WindowSizeAndPosition {
 /**
  * Interface representing parameters for image manipulation.
  */
-export interface Parameters {
+export interface ThumborParameters {
   /**
    * Path to the image.
    */
@@ -104,3 +104,8 @@ export interface Parameters {
    */
   filtersCalls: string[];
 }
+
+/**
+ * @deprecated Use `ThumborParameters`. This name shadows TypeScript's built-in `Parameters<T>`.
+ */
+export type Parameters = ThumborParameters

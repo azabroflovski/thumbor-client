@@ -17,7 +17,6 @@ export default defineConfig([
     globalName: 'ThumborClient',
     platform: 'browser',
     target: 'es2020',
-    noExternal: [/.*/],
     minify: true,
     sourcemap: true
   }

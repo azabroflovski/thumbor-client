@@ -1,5 +1,5 @@
 import { Thumbor } from './thumbor.ts'
-import { ThumborClientOptions } from './types.ts'
+import type { ThumborClientOptions } from './types.ts'
 
 /**
  * Factory function to create a Thumbor instance with given options.

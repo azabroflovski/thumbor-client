@@ -48,10 +48,10 @@
     "build": "tsdown",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc"
+    "test:smoke": "node test/smoke.mjs && node test/smoke.cjs && node test/smoke-iife.cjs",
+    "typecheck": "tsc && tsc -p tsconfig.test.json"
   },
   "devDependencies": {
-    "@noble/hashes": "^2",
     "@types/node": "^24",
     "tsdown": "^0.23.0",
     "typescript": "^7",
