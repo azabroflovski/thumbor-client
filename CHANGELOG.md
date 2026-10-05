@@ -4,6 +4,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-05
+
 ### Added
 
 - `filters` helpers for all filters enabled in Thumbor by default: `filters.quality(80)`, `filters.format('webp')`, `filters.blur(5)`, `filters.watermark(...)` and others. They return strings for `filter()`.
@@ -96,7 +98,8 @@ Published without the `dist` folder and cannot be used.
 
 First release: `createThumbor()`, resize, fit-in, crop, flip, alignment, smart crop, trim, filters, unsafe urls. Signed urls did not work until 0.1.0.
 
-[Unreleased]: https://github.com/azabroflovski/thumbor-client/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/azabroflovski/thumbor-client/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/azabroflovski/thumbor-client/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/azabroflovski/thumbor-client/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/azabroflovski/thumbor-client/compare/v0.0.7...v0.1.0
 [0.0.7]: https://github.com/azabroflovski/thumbor-client/compare/v0.0.6...v0.0.7

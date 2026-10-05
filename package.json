@@ -1,6 +1,6 @@
 {
   "name": "thumbor-client",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Thumbor URL builder for Node, Bun, Deno, edge runtimes and browsers",
   "license": "MIT",
   "author": "azabroflovski",
