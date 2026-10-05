@@ -28,6 +28,7 @@
         <fieldset>
           <legend>Image</legend>
           <label>Source <input name="image" value="https://raw.githubusercontent.com/thumbor/thumbor/master/example.jpg" /></label>
+          <label class="check"><input name="encode" type="checkbox" /> encode url (for urls with a query string)</label>
         </fieldset>
 
         <fieldset>
@@ -53,9 +54,17 @@
 
         <fieldset>
           <legend>Crop</legend>
+          <label class="check"><input name="smart" type="checkbox" checked /> smart</label>
+          <label class="check"><input name="trim" type="checkbox" /> trim</label>
           <div class="row">
-            <label class="check"><input name="smart" type="checkbox" checked /> smart</label>
-            <label class="check"><input name="trim" type="checkbox" /> trim</label>
+            <label>trim reference
+              <select name="trimOrientation">
+                <option value="">default</option>
+                <option value="top-left">top-left</option>
+                <option value="bottom-right">bottom-right</option>
+              </select>
+            </label>
+            <label>tolerance <input name="trimTolerance" type="number" min="0" max="442" placeholder="0" /></label>
           </div>
           <div class="row">
             <label>halign
@@ -90,7 +99,35 @@
             <textarea name="filters" rows="4" spellcheck="false">quality(80)
 format(webp)</textarea>
           </label>
+          <label>Add
+            <select id="add-filter">
+              <option value="">choose a filter</option>
+              <option>quality(80)</option>
+              <option>format(webp)</option>
+              <option>format(avif)</option>
+              <option>blur(5)</option>
+              <option>grayscale()</option>
+              <option>brightness(20)</option>
+              <option>contrast(20)</option>
+              <option>saturation(1.5)</option>
+              <option>sharpen(2,1,true)</option>
+              <option>rotate(90)</option>
+              <option>fill(white)</option>
+              <option>fill(blur)</option>
+              <option>round_corner(20,255,255,255)</option>
+              <option>watermark(https://raw.githubusercontent.com/thumbor/thumbor/master/docs/images/logo-thumbor.png,-10,-10,30,20)</option>
+              <option>no_upscale()</option>
+              <option>strip_exif()</option>
+              <option>max_bytes(20000)</option>
+            </select>
+          </label>
           <p class="hint">See the <a href="https://thumbor.readthedocs.io/en/latest/filters.html">filter list</a>.</p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Output</legend>
+          <label class="check"><input name="meta" type="checkbox" /> meta (JSON instead of the image)</label>
+          <label class="check"><input name="debug" type="checkbox" /> debug (draw focal points)</label>
         </fieldset>
         <button type="button" id="reset">Reset</button>
       </form>
@@ -110,7 +147,7 @@ format(webp)</textarea>
 
         <h2>Preview</h2>
         <p class="hint">Loaded from the server above. Run one locally: <code>docker run -p 8888:8888 thumbororg/thumbor:7-py-3.12 -i 0.0.0.0</code></p>
-        <div id="preview"><img id="img" alt="" /><span id="img-error" hidden>Could not load the image from this server.</span></div>
+        <div id="preview"><img id="img" alt="" /><pre id="json" hidden></pre><span id="img-error" hidden></span></div>
       </section>
     </main>
 
