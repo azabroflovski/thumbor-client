@@ -56,6 +56,7 @@
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs && vite build demo --outDir ../docs/.vitepress/dist/playground --emptyOutDir",
     "docs:preview": "vitepress preview docs",
+    "docs:deploy": "bun run docs:build && wrangler deploy",
     "release": "bun scripts/release.ts",
     "prepublishOnly": "npm run build"
   },
@@ -66,6 +67,7 @@
     "vite": "^8",
     "vitepress": "^1.6.4",
     "vitest": "^5",
-    "vue": "^3.5.43"
+    "vue": "^3.5.43",
+    "wrangler": "^4.147.0"
   }
 }

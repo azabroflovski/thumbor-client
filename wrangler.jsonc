@@ -1,0 +1,16 @@
+// Docs site: static files only, no worker script.
+// Built by `bun run docs:build`, deployed by Workers Builds (git integration) or `bun run docs:deploy`.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "thumbor-client-docs",
+  "compatibility_date": "2026-10-05",
+  "assets": {
+    "directory": "./docs/.vitepress/dist",
+    // /api serves api.html, matches cleanUrls in docs/.vitepress/config.ts
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  "routes": [
+    { "pattern": "thumbor-js.broflovski.dev", "custom_domain": true }
+  ]
+}
