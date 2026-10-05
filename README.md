@@ -2,7 +2,7 @@
 
 URL builder for [Thumbor](https://www.thumbor.org/). TypeScript, no dependencies, ~3 KB gzipped.
 
-Docs: https://thumbor-js.broflovski.dev · Playground: https://thumbor-js.broflovski.dev/playground/
+[Documentation](https://thumbor-js.broflovski.dev) · [Playground](https://thumbor-js.broflovski.dev/playground/)
 
 Works in Node, Bun, Deno, Cloudflare Workers and browsers. Urls are built synchronously everywhere, signing included, so it works during SSR and in templates.
 
