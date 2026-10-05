@@ -1,5 +1,30 @@
 # Changelog
 
+## v0.1.1
+
+[compare changes](https://github.com/azabroflovski/thumbor-client/compare/v0.1.0...v0.1.1)
+
+### 🩹 Fixes
+
+- `FitInType`, `HorizontalPosition`, `VerticalPosition` are exported at runtime, not only in types
+- `halign`/`valign` produce lowercase segments (`left`, `top`), uppercase was rejected by Thumbor
+- `adaptive-fit-in` instead of `adaptative-fit-in`
+- Signing works in browsers, Deno and edge runtimes: `node:crypto` replaced with a built-in HMAC-SHA1. Signatures are unchanged
+- No `0x0` segment when size is not set
+- Trailing slash in server url is ignored
+- `vite` removed from runtime dependencies
+
+### 🚀 Enhancements
+
+- `FitInType.ADAPTIVE_FULL` (`adaptive-full-fit-in`)
+- `ThumborParameters` type; `Parameters` kept as deprecated alias
+- `Thumbor` class exported
+
+### 🏡 Chore
+
+- Build with tsdown: esm, cjs, minified iife (`ThumborClient` global), separate types for import and require
+- TypeScript 7, Vitest, CI with smoke tests on Node, Bun and Deno
+
 ## v0.0.7
 
 [compare changes](https://github.com/azabroflovski/thumbor-client/compare/v0.0.6...v0.0.7)
