@@ -1,4 +1,4 @@
-import { sign } from './sign.ts'
+import { composeUrl, defaultParameters } from './compose.ts'
 import type { FromUrlOptions, ThumborParameters, ThumborClientOptions, TrimOrientation, WindowSizeAndPosition } from './types.ts'
 import { FitInType, type HorizontalPosition, type VerticalPosition } from './enums.ts'
 
@@ -25,16 +25,7 @@ export class Thumbor {
    * @returns Default parameters object.
    */
   public defaultParameters(): ThumborParameters {
-    return {
-      imagePath: '',
-      width: 0,
-      height: 0,
-      smart: false,
-      trimFlag: false,
-      withFlipHorizontally: false,
-      withFlipVertically: false,
-      filtersCalls: []
-    }
+    return defaultParameters()
   }
 
   /**
@@ -190,122 +181,9 @@ export class Thumbor {
    */
   public buildURL() {
     try {
-      const operation = this.getOperationPath()
-      const path = operation ? operation + '/' + this.parameters.imagePath : this.parameters.imagePath
-
-      if (this.key) {
-        return this.url + '/' + sign(this.key, path) + '/' + path
-      }
-
-      return this.url + '/unsafe/' + path
+      return composeUrl(this.url, this.key, this.parameters)
     } finally {
       this.parameters = this.defaultParameters()
     }
-  }
-
-  /**
-   * Constructs URL parts based on parameters.
-   * @returns Array of URL parts.
-   */
-  private getURLParts() {
-    const parts: string[] = []
-
-    if (this.parameters.debug) {
-      parts.push('debug')
-    }
-
-    if (this.parameters.meta) {
-      parts.push('meta')
-    }
-
-    if (this.parameters.trimFlag) {
-      let trim = 'trim'
-      if (this.parameters.trimOrientation) trim += ':' + this.parameters.trimOrientation
-      if (this.parameters.trimTolerance !== undefined) trim += ':' + this.parameters.trimTolerance
-      parts.push(trim)
-    }
-
-    if (this.parameters.cropValues) {
-      parts.push(
-        this.parameters.cropValues.left.toString() +
-        'x' + this.parameters.cropValues.top.toString() +
-        ':' + this.parameters.cropValues.right.toString() +
-        'x' + this.parameters.cropValues.bottom.toString()
-      )
-    }
-
-    switch (this.parameters.fitInType) {
-      case FitInType.DEFAULT:
-        parts.push('fit-in')
-        break
-      case FitInType.FULL:
-        parts.push('full-fit-in')
-        break
-      case FitInType.ADAPTIVE:
-        parts.push('adaptive-fit-in')
-        break
-      case FitInType.ADAPTIVE_FULL:
-        parts.push('adaptive-full-fit-in')
-        break
-      default:
-        break
-    }
-
-    if (
-      this.parameters.width ||
-      this.parameters.height ||
-      this.parameters.withFlipHorizontally ||
-      this.parameters.withFlipVertically
-    ) {
-      let sizeString = ''
-
-      if (this.parameters.withFlipHorizontally) {
-        sizeString += '-'
-      }
-
-      sizeString += this.parameters.width
-
-      sizeString += 'x'
-
-      if (this.parameters.withFlipVertically) {
-        sizeString += '-'
-      }
-
-      sizeString += this.parameters.height
-
-      parts.push(sizeString)
-    }
-
-    if (this.parameters.halignValue) {
-      parts.push(this.parameters.halignValue)
-    }
-
-    if (this.parameters.valignValue) {
-      parts.push(this.parameters.valignValue)
-    }
-
-    if (this.parameters.smart) {
-      parts.push('smart')
-    }
-
-    if (this.parameters.filtersCalls.length > 0) {
-      parts.push('filters:' + this.parameters.filtersCalls.join(':'))
-    }
-
-    return parts
-  }
-
-  /**
-   * Constructs the operation path for the URL.
-   * @returns The constructed operation path.
-   */
-  private getOperationPath() {
-    const parts = this.getURLParts()
-
-    if (parts.length === 0) {
-      return ''
-    }
-
-    return parts.join('/')
   }
 }
