@@ -54,7 +54,8 @@
     "test:live": "node test/live.mjs",
     "thumbor": "docker compose up -d --wait",
     "typecheck": "tsc && tsc -p tsconfig.test.json && tsc -p demo",
-    "release": "bun scripts/release.ts"
+    "release": "bun scripts/release.ts",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@types/node": "^24",
