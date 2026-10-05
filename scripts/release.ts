@@ -47,5 +47,5 @@ await Bun.write('package.json', JSON.stringify(pkg, null, 2) + '\n')
 
 await $`git add CHANGELOG.md package.json`
 await $`git commit -m ${'chore(release): v' + version}`
-await $`git tag ${'v' + version}`
+await $`git tag -a ${'v' + version} -m ${'v' + version}`
 console.log(`v${version} tagged. Next: git push --follow-tags && npm publish`)
