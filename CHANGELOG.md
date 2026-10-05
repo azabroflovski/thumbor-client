@@ -4,6 +4,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 
 ## [Unreleased]
 
+### Changed
+
+- README on npm links to the docs and playground. No code changes.
+
 ## [0.4.0] - 2026-10-05
 
 ### Added
