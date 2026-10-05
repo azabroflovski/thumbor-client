@@ -4,6 +4,15 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 
 ## [Unreleased]
 
+### Added
+
+- `filters` helpers for all filters enabled in Thumbor by default: `filters.quality(80)`, `filters.format('webp')`, `filters.blur(5)`, `filters.watermark(...)` and others. They return strings for `filter()`.
+- `filter()` accepts several calls: `filter(filters.quality(80), filters.format('webp'))`.
+- `trim(orientation, tolerance)` for `trim:bottom-right:10`. `trim()` without arguments works as before.
+- `meta()`: Thumbor returns JSON with the image size and operations instead of the image.
+- `debug()`: Thumbor draws detected focal points.
+- `fromUrl(url, { encode: true })` encodes the image url, for source urls with a query string.
+
 ## [0.2.0] - 2026-10-05
 
 Generated urls change in some cases, see "Changed". Urls that worked before still work in Thumbor.

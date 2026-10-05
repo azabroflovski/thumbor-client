@@ -1,5 +1,5 @@
 import { sign } from './sign.ts'
-import type { ThumborParameters, ThumborClientOptions, WindowSizeAndPosition } from './types.ts'
+import type { FromUrlOptions, ThumborParameters, ThumborClientOptions, TrimOrientation, WindowSizeAndPosition } from './types.ts'
 import { FitInType, type HorizontalPosition, type VerticalPosition } from './enums.ts'
 
 /**
@@ -40,10 +40,11 @@ export class Thumbor {
   /**
    * Sets the image path from a URL.
    * @param url The URL of the image.
+   * @param options `{ encode: true }` encodes the url, needed when it has a query string.
    * @returns The Thumbor instance.
    */
-  public fromUrl(url: string) {
-    this.parameters.imagePath = url
+  public fromUrl(url: string, options: FromUrlOptions = {}) {
+    this.parameters.imagePath = options.encode ? encodeURIComponent(url) : url
     return this
   }
 
@@ -81,11 +82,33 @@ export class Thumbor {
   }
 
   /**
-   * Sets trim flag.
+   * Removes surrounding space of the same color: `trim`, `trim:bottom-right:10`.
+   * @param orientation Pixel used as the color reference, Thumbor defaults to top-left.
+   * @param tolerance Color distance still treated as the same color, 0..442.
    * @returns The Thumbor instance.
    */
-  public trim() {
+  public trim(orientation?: TrimOrientation, tolerance?: number) {
     this.parameters.trimFlag = true
+    this.parameters.trimOrientation = orientation
+    this.parameters.trimTolerance = tolerance
+    return this
+  }
+
+  /**
+   * Returns JSON with the image size and the operations Thumbor would apply, instead of the image.
+   * @returns The Thumbor instance.
+   */
+  public meta(enabled: boolean = true) {
+    this.parameters.meta = enabled
+    return this
+  }
+
+  /**
+   * Debug mode: Thumbor draws detected focal points on the image.
+   * @returns The Thumbor instance.
+   */
+  public debug(enabled: boolean = true) {
+    this.parameters.debug = enabled
     return this
   }
 
@@ -142,12 +165,12 @@ export class Thumbor {
   }
 
   /**
-   * Adds a filter call for image processing.
-   * @param filterCall The filter call.
+   * Adds filter calls: `filter('quality(80)')` or `filter(filters.quality(80), filters.format('webp'))`.
+   * @param filterCalls Filter calls.
    * @returns The Thumbor instance.
    */
-  public filter(filterCall: string) {
-    this.parameters.filtersCalls.push(filterCall)
+  public filter(...filterCalls: string[]) {
+    this.parameters.filtersCalls.push(...filterCalls)
     return this
   }
 
@@ -187,8 +210,19 @@ export class Thumbor {
   private getURLParts() {
     const parts: string[] = []
 
+    if (this.parameters.debug) {
+      parts.push('debug')
+    }
+
+    if (this.parameters.meta) {
+      parts.push('meta')
+    }
+
     if (this.parameters.trimFlag) {
-      parts.push('trim')
+      let trim = 'trim'
+      if (this.parameters.trimOrientation) trim += ':' + this.parameters.trimOrientation
+      if (this.parameters.trimTolerance !== undefined) trim += ':' + this.parameters.trimTolerance
+      parts.push(trim)
     }
 
     if (this.parameters.cropValues) {

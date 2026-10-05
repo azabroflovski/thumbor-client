@@ -16,6 +16,22 @@ export interface ThumborClientOptions {
 }
 
 /**
+ * Pixel used as the trim color reference.
+ */
+export type TrimOrientation = 'top-left' | 'bottom-right'
+
+/**
+ * Options for Thumbor#fromUrl().
+ */
+export interface FromUrlOptions {
+  /**
+   * Encode the image url with encodeURIComponent. Use it for urls with a query string.
+   * Thumbor decodes the url before loading the image.
+   */
+  encode?: boolean
+}
+
+/**
  * Interface representing window size and position.
  */
 export interface WindowSizeAndPosition {
@@ -68,6 +84,26 @@ export interface ThumborParameters {
    * Flag indicating whether to trim the image.
    */
   trimFlag: boolean;
+
+  /**
+   * Pixel used as the trim color reference. Thumbor defaults to top-left.
+   */
+  trimOrientation?: TrimOrientation;
+
+  /**
+   * Color tolerance for trim, 0..442.
+   */
+  trimTolerance?: number;
+
+  /**
+   * Return JSON metadata instead of the image.
+   */
+  meta?: boolean;
+
+  /**
+   * Debug mode: Thumbor draws focal points and detected features.
+   */
+  debug?: boolean;
 
   /**
    * Type of fitting to use.
