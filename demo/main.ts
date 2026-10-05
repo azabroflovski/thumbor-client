@@ -6,8 +6,6 @@ const codeEl = document.querySelector<HTMLElement>('#code')!
 const img = document.querySelector<HTMLImageElement>('#img')!
 const imgError = document.querySelector<HTMLElement>('#img-error')!
 
-const STORAGE_KEY = 'thumbor-client-demo'
-
 function read() {
   const data = new FormData(form)
   const str = (name: string) => String(data.get(name) ?? '').trim()
@@ -125,23 +123,22 @@ function render() {
     img.src = url
   }
 
-  try {
-    // the key is not saved
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...Object.fromEntries(new FormData(form)), key: '' }))
-  } catch {}
+  // form state goes to the hash so a setup can be shared as a link; the key is never put there
+  const params = new URLSearchParams()
+  for (const [name, value] of new FormData(form)) {
+    if (name !== 'key') params.append(name, String(value))
+  }
+  history.replaceState(null, '', '#' + params)
 }
 
 function restore() {
-  let saved: Record<string, string> | null = null
-  try {
-    saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? 'null')
-  } catch {}
-  if (!saved) return
+  if (!location.hash) return
+  const params = new URLSearchParams(location.hash.slice(1))
 
   for (const el of Array.from(form.elements) as HTMLInputElement[]) {
     if (!el.name || el.name === 'key') continue
-    if (el.type === 'checkbox') el.checked = saved[el.name] === 'on'
-    else if (el.name in saved) el.value = saved[el.name]
+    if (el.type === 'checkbox') el.checked = params.get(el.name) === 'on'
+    else if (params.has(el.name)) el.value = params.get(el.name)!
   }
 }
 
@@ -158,6 +155,11 @@ for (const button of document.querySelectorAll<HTMLButtonElement>('[data-copy]')
     setTimeout(() => (button.textContent = 'Copy'), 1200)
   })
 }
+
+document.querySelector('#reset')!.addEventListener('click', () => {
+  form.reset()
+  render()
+})
 
 form.addEventListener('input', render)
 form.addEventListener('submit', (e) => e.preventDefault())

@@ -22,7 +22,7 @@
           <legend>Server</legend>
           <label>Thumbor url <input name="server" value="http://localhost:8888" /></label>
           <label>Security key <input name="key" placeholder="empty for unsafe" /></label>
-          <p class="hint">The key stays in this page, nothing is sent anywhere. Don't ship real keys to browsers.</p>
+          <p class="hint">Used only in this tab, not saved and not put in the page link. Don't ship real keys to browsers.</p>
         </fieldset>
 
         <fieldset>
@@ -92,6 +92,7 @@ format(webp)</textarea>
           </label>
           <p class="hint">See the <a href="https://thumbor.readthedocs.io/en/latest/filters.html">filter list</a>.</p>
         </fieldset>
+        <button type="button" id="reset">Reset</button>
       </form>
 
       <section id="result">

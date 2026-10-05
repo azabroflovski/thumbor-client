@@ -66,6 +66,7 @@ main {
 }
 
 fieldset {
+  min-width: 0;
   margin: 0 0 16px;
   padding: 12px 14px 4px;
   border: 1px solid var(--border);
@@ -94,6 +95,12 @@ label.check {
 .row {
   display: flex;
   gap: 12px;
+}
+
+@media (max-width: 420px) {
+  .row {
+    gap: 8px;
+  }
 }
 
 .row > label {
@@ -132,10 +139,7 @@ textarea {
 
 #result h2 {
   margin: 0 0 8px;
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--muted);
+  font-size: 15px;
 }
 
 .output {
@@ -154,10 +158,7 @@ textarea {
   white-space: pre-wrap;
 }
 
-.output button {
-  position: absolute;
-  top: 8px;
-  right: 8px;
+button {
   padding: 4px 10px;
   border: 1px solid var(--border);
   border-radius: 4px;
@@ -165,6 +166,12 @@ textarea {
   color: var(--fg);
   font-size: 12px;
   cursor: pointer;
+}
+
+.output button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
 }
 
 #preview {
