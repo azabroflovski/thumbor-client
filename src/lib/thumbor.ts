@@ -1,7 +1,6 @@
-import crypto from 'crypto'
-import { isDefined } from '../helpers'
-import { Parameters, ThumborClientOptions, WindowSizeAndPosition } from './types.ts'
-import { FitInType, HorizontalPosition, VerticalPosition } from './enums.ts'
+import { sign } from './sign.ts'
+import type { ThumborParameters, ThumborClientOptions, WindowSizeAndPosition } from './types.ts'
+import { FitInType, type HorizontalPosition, type VerticalPosition } from './enums.ts'
 
 /**
  * Class representing a Thumbor client for generating image URLs.
@@ -9,7 +8,7 @@ import { FitInType, HorizontalPosition, VerticalPosition } from './enums.ts'
 export class Thumbor {
   private readonly url: string
   private readonly key?: string
-  private parameters: Parameters = this.defaultParameters()
+  private parameters: ThumborParameters = this.defaultParameters()
 
   /**
    * Constructs a new Thumbor instance.
@@ -17,7 +16,7 @@ export class Thumbor {
    * @param key Optional security key for accessing the Thumbor server.
    */
   constructor({ url, key }: ThumborClientOptions) {
-    this.url = url
+    this.url = url.replace(/\/+$/, '')
     this.key = key
   }
 
@@ -25,7 +24,7 @@ export class Thumbor {
    * Creates default parameters.
    * @returns Default parameters object.
    */
-  public defaultParameters(): Parameters {
+  public defaultParameters(): ThumborParameters {
     return {
       imagePath: '',
       width: 0,
@@ -64,7 +63,7 @@ export class Thumbor {
    * @param height The height of the image.
    * @returns The Thumbor instance.
    */
-  public resize(width: Parameters['width'], height: Parameters['height']) {
+  public resize(width: ThumborParameters['width'], height: ThumborParameters['height']) {
     this.parameters.width = width
     this.parameters.height = height
     this.parameters.fitInType = undefined
@@ -167,24 +166,18 @@ export class Thumbor {
    * @returns The generated image URL.
    */
   public buildURL() {
-    const operation = this.getOperationPath()
-    const dataToEncrypt = operation + '/' + this.parameters.imagePath
+    try {
+      const operation = this.getOperationPath()
+      const path = operation ? operation + '/' + this.parameters.imagePath : this.parameters.imagePath
 
-    if (this.key) {
-      const digest = crypto
-        .createHmac('sha1', this.key)
-        .update(dataToEncrypt)
-        .digest('base64')
-        .replace(/\+/g, '-').replace(/\//g, '_')
+      if (this.key) {
+        return this.url + '/' + sign(this.key, path) + '/' + path
+      }
 
+      return this.url + '/unsafe/' + path
+    } finally {
       this.parameters = this.defaultParameters()
-
-      return this.url + '/' + digest + '/' + dataToEncrypt
     }
-
-    this.parameters = this.defaultParameters()
-
-    return this.url + '/unsafe/' + dataToEncrypt
   }
 
   /**
@@ -192,7 +185,7 @@ export class Thumbor {
    * @returns Array of URL parts.
    */
   private getURLParts() {
-    const parts = []
+    const parts: string[] = []
 
     if (this.parameters.trimFlag) {
       parts.push('trim')
@@ -215,15 +208,18 @@ export class Thumbor {
         parts.push('full-fit-in')
         break
       case FitInType.ADAPTIVE:
-        parts.push('adaptative-fit-in')
+        parts.push('adaptive-fit-in')
+        break
+      case FitInType.ADAPTIVE_FULL:
+        parts.push('adaptive-full-fit-in')
         break
       default:
         break
     }
 
     if (
-      isDefined(this.parameters.width) ||
-      isDefined(this.parameters.height) ||
+      this.parameters.width ||
+      this.parameters.height ||
       this.parameters.withFlipHorizontally ||
       this.parameters.withFlipVertically
     ) {

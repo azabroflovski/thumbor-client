@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>thumbor-client playground</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>thumbor-client</h1>
+      <p>
+        URL builder for <a href="https://www.thumbor.org/">Thumbor</a>.
+        <a href="https://github.com/azabroflovski/thumbor-client">GitHub</a> ·
+        <a href="https://www.npmjs.com/package/thumbor-client">npm</a>
+      </p>
+    </header>
+
+    <main>
+      <form id="form" autocomplete="off">
+        <fieldset>
+          <legend>Server</legend>
+          <label>Thumbor url <input name="server" value="http://localhost:8888" /></label>
+          <label>Security key <input name="key" placeholder="empty for unsafe" /></label>
+          <p class="hint">Used only in this tab, not saved and not put in the page link. Don't ship real keys to browsers.</p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Image</legend>
+          <label>Source <input name="image" value="https://raw.githubusercontent.com/thumbor/thumbor/master/example.jpg" /></label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Size</legend>
+          <div class="row">
+            <label>Width <input name="width" type="number" min="0" value="300" /></label>
+            <label>Height <input name="height" type="number" min="0" value="200" /></label>
+          </div>
+          <label>Fit-in
+            <select name="fitIn">
+              <option value="">none</option>
+              <option value="DEFAULT">fit-in</option>
+              <option value="FULL">full-fit-in</option>
+              <option value="ADAPTIVE">adaptive-fit-in</option>
+              <option value="ADAPTIVE_FULL">adaptive-full-fit-in</option>
+            </select>
+          </label>
+          <div class="row">
+            <label class="check"><input name="flipH" type="checkbox" /> flip horizontally</label>
+            <label class="check"><input name="flipV" type="checkbox" /> flip vertically</label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Crop</legend>
+          <div class="row">
+            <label class="check"><input name="smart" type="checkbox" checked /> smart</label>
+            <label class="check"><input name="trim" type="checkbox" /> trim</label>
+          </div>
+          <div class="row">
+            <label>halign
+              <select name="halign">
+                <option value="">none</option>
+                <option value="LEFT">left</option>
+                <option value="CENTER">center</option>
+                <option value="RIGHT">right</option>
+              </select>
+            </label>
+            <label>valign
+              <select name="valign">
+                <option value="">none</option>
+                <option value="TOP">top</option>
+                <option value="MIDDLE">middle</option>
+                <option value="BOTTOM">bottom</option>
+              </select>
+            </label>
+          </div>
+          <label class="check"><input name="manualCrop" type="checkbox" /> manual crop</label>
+          <div class="row">
+            <label>left <input name="cropLeft" type="number" min="0" value="0" /></label>
+            <label>top <input name="cropTop" type="number" min="0" value="0" /></label>
+            <label>right <input name="cropRight" type="number" min="0" value="100" /></label>
+            <label>bottom <input name="cropBottom" type="number" min="0" value="100" /></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Filters</legend>
+          <label>One per line
+            <textarea name="filters" rows="4" spellcheck="false">quality(80)
+format(webp)</textarea>
+          </label>
+          <p class="hint">See the <a href="https://thumbor.readthedocs.io/en/latest/filters.html">filter list</a>.</p>
+        </fieldset>
+        <button type="button" id="reset">Reset</button>
+      </form>
+
+      <section id="result">
+        <h2>URL</h2>
+        <div class="output">
+          <code id="url"></code>
+          <button type="button" data-copy="url">Copy</button>
+        </div>
+
+        <h2>Code</h2>
+        <div class="output">
+          <pre><code id="code"></code></pre>
+          <button type="button" data-copy="code">Copy</button>
+        </div>
+
+        <h2>Preview</h2>
+        <p class="hint">Loaded from the server above. Run one locally: <code>docker run -p 8888:8888 thumbororg/thumbor:7-py-3.12 -i 0.0.0.0</code></p>
+        <div id="preview"><img id="img" alt="" /><span id="img-error" hidden>Could not load the image from this server.</span></div>
+      </section>
+    </main>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

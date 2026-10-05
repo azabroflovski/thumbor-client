@@ -1,0 +1,13 @@
+services:
+  thumbor:
+    image: thumbororg/thumbor:7-py-3.12
+    command: ["-c", "/conf/thumbor.conf", "-i", "0.0.0.0", "-p", "8888"]
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./thumbor.conf:/conf/thumbor.conf:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8888/healthcheck')"]
+      interval: 2s
+      timeout: 2s
+      retries: 30

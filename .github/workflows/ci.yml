@@ -1,0 +1,63 @@
+name: ci
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - run: bun run typecheck
+      - run: bun run test
+      - run: bun run build
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist
+
+  runtimes:
+    needs: check
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22, 24, 26]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node }}
+      - uses: oven-sh/setup-bun@v2
+      - uses: denoland/setup-deno@v2
+      - name: node
+        run: node test/smoke.mjs && node test/smoke.cjs && node test/smoke-iife.cjs
+      - name: bun
+        if: matrix.node == 24
+        run: bun test/smoke.mjs && bun test/smoke.cjs
+      - name: deno
+        if: matrix.node == 24
+        run: deno run -A test/smoke.mjs
+
+  thumbor:
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - run: docker compose up -d --wait
+      - run: node test/live.mjs

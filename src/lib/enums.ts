@@ -1,53 +1,31 @@
 /**
- * Enum representing different fitting types for an element.
+ * Fit-in mode.
  */
 export enum FitInType {
-  /**
-   * Default fitting type.
-   */
+  /** `fit-in` */
   DEFAULT = 'DEFAULT',
-  /**
-   * Full fitting type.
-   */
+  /** `full-fit-in` */
   FULL = 'FULL',
-  /**
-   * Adaptive fitting type.
-   */
-  ADAPTIVE = 'ADAPTIVE'
+  /** `adaptive-fit-in` */
+  ADAPTIVE = 'ADAPTIVE',
+  /** `adaptive-full-fit-in` */
+  ADAPTIVE_FULL = 'ADAPTIVE_FULL'
 }
 
 /**
- * Enum representing vertical positions.
+ * Vertical alignment for cropping.
  */
 export enum VerticalPosition {
-  /**
-   * Top vertical position.
-   */
-  TOP = 'TOP',
-  /**
-   * Middle vertical position.
-   */
-  MIDDLE = 'MIDDLE',
-  /**
-   * Bottom vertical position.
-   */
-  BOTTOM = 'BOTTOM'
+  TOP = 'top',
+  MIDDLE = 'middle',
+  BOTTOM = 'bottom'
 }
 
 /**
- * Enum representing horizontal positions.
+ * Horizontal alignment for cropping.
  */
 export enum HorizontalPosition {
-  /**
-   * Left horizontal position.
-   */
-  LEFT = 'LEFT',
-  /**
-   * Center horizontal position.
-   */
-  CENTER = 'CENTER',
-  /**
-   * Right horizontal position.
-   */
-  RIGHT = 'RIGHT'
+  LEFT = 'left',
+  CENTER = 'center',
+  RIGHT = 'right'
 }

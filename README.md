@@ -1,121 +1,153 @@
 # thumbor-client
 
-A simple and efficient [Thumbor](https://www.thumbor.org/) client for TypeScript/JavaScript (works on node and browser).
+URL builder for [Thumbor](https://www.thumbor.org/). TypeScript, no dependencies, ~2 KB gzipped.
 
-## Installation
+Works in Node, Bun, Deno, Cloudflare Workers and browsers. `buildURL()` is synchronous everywhere, signing included, so it can be called during SSR or in templates.
 
+## Install
+
+```sh
+npm i thumbor-client
+# or
+bun add thumbor-client
+# or
+deno add npm:thumbor-client
 ```
-# via npm
-$ npm i thumbor-client
 
-# via yarn
-$ yarn add thumbor-client
+## Usage
 
-# via bun
-$ bun add thumbor-client
-```
-
-## Simple usage
-
-```typescript
+```ts
 import { createThumbor } from 'thumbor-client'
 
 const thumbor = createThumbor({
-    url: 'https://your-thumbor.com',
-    key: 'secret'
+  url: 'https://thumbor.example.com',
+  key: 'secret' // optional, omit for unsafe urls
 })
 
-const imgUrl = thumbor
+thumbor
+  .fromUrl('https://cataas.com/cat')
+  .resize(300, 200)
+  .smartCrop()
+  .buildURL()
+// https://thumbor.example.com/BHXj4E9HQX8RkVGdEhO1tua9QdI=/300x200/smart/https://cataas.com/cat
+```
+
+Without `key` the url is unsafe:
+
+```
+https://thumbor.example.com/unsafe/300x200/smart/https://cataas.com/cat
+```
+
+`buildURL()` resets the builder, so one client can be reused for many images.
+
+### Fit-in, filters
+
+```ts
+import { createThumbor, FitInType } from 'thumbor-client'
+
+thumbor
+  .setPath('photos/cat.jpg')
+  .fitIn(800, 600, FitInType.FULL)
+  .filter('quality(80)')
+  .filter('format(webp)')
+  .buildURL()
+// https://thumbor.example.com/unsafe/full-fit-in/800x600/filters:quality(80):format(webp)/photos/cat.jpg
+```
+
+### Manual crop and alignment
+
+```ts
+import { HorizontalPosition, VerticalPosition } from 'thumbor-client'
+
+thumbor
+  .setPath('photos/cat.jpg')
+  .crop({ left: 10, top: 20, right: 410, bottom: 320 })
+  .resize(200, 150)
+  .halign(HorizontalPosition.LEFT)
+  .valign(VerticalPosition.TOP)
+  .buildURL()
+// https://thumbor.example.com/unsafe/10x20:410x320/200x150/left/top/photos/cat.jpg
+```
+
+## API
+
+| Method | Thumbor segment |
+|---|---|
+| `fromUrl(url)` | image url as is |
+| `setPath(path)` | image path, leading `/` removed |
+| `resize(width, height)` | `300x200`; `0` keeps proportions, `'orig'` keeps original size (Thumbor 7 returns 500 for `'orig'` combined with `0`) |
+| `fitIn(width, height, type?)` | `fit-in`, `full-fit-in`, `adaptive-fit-in`, `adaptive-full-fit-in` |
+| `flipHorizontally()` / `flipVertically()` | `-300x-200` |
+| `crop({ left, top, right, bottom })` | `10x20:410x320` |
+| `halign(HorizontalPosition)` | `left`, `center`, `right` |
+| `valign(VerticalPosition)` | `top`, `middle`, `bottom` |
+| `smartCrop(enabled = true)` | `smart` |
+| `trim()` | `trim` |
+| `filter(call)` | `filters:quality(80):...`, see [Thumbor filters](https://thumbor.readthedocs.io/en/latest/filters.html) |
+| `buildURL()` | returns the url and resets the builder |
+
+Image urls are not encoded. If the source url has a query string, encode it yourself with `encodeURIComponent`.
+
+## Security key in the browser
+
+The library can sign urls in the browser, but any key shipped to the browser is public. Sign on the server and pass ready urls to the client, or use unsafe urls with a Thumbor instance that allows them.
+
+## Browser without a bundler
+
+ES module:
+
+```html
+<script type="module">
+  import { createThumbor } from 'https://cdn.jsdelivr.net/npm/thumbor-client/dist/thumbor-client.js'
+
+  const url = createThumbor({ url: 'https://thumbor.example.com' })
     .fromUrl('https://cataas.com/cat')
-    .smartCrop(true)
     .resize(300, 200)
     .buildURL()
-
-console.log(imageUrl) 
-// https://your-thumbor.com/unsafe/300x200/smart/https://cataas.com/cat
-```
-
-## Using from CDN
-
-You can use `thumbor-client` from a CDN via a script tag:
-
-```html
-<script src="https://unpkg.com/thumbor-client/dist/thumbor-client.js"></script>
-```
-
-Here we are using `unpkg`, but you can also use any CDN that serves npm packages, for example `jsdelivr` or `cdnjs`.
-Of course, you can also download this file and serve it yourself.
-
-When using `thumbor-client` from a CDN, there is no "build step" (bundler) involved. This makes the setup a lot simpler,
-and is suitable for enhancing static HTML or integrating with a backend framework. However, you won't be able to use frameworks.
-
-## Using the ES Module Build
-
-Throughout the rest of the documentation, we will be primarily using ES modules syntax.
-Most modern browsers now support ES modules natively, so we can use `thumbor-client` from a CDN via native ES modules like this:
-
-```html
-<script type="module">
-  import { createThumbor } from 'https://unpkg.com/thumbor-client/dist/thumbor-client.js'
-
-  const thumbor = createThumbor({
-      url: 'https://your-thumbor.com',
-      key: 'secret'
-  })
-
-  const imgUrl = thumbor
-      .fromUrl('https://cataas.com/cat')
-      .smartCrop(true)
-      .resize(300, 200)
-      .buildURL()
-
-  console.log(imageUrl)
-  // https://your-thumbor.com/unsafe/300x200/smart/https://cataas.com/cat
 </script>
 ```
 
-### Enabling Import maps
-
-In the above example, we are importing from the full CDN URL, but in the rest of the documentation you will see code like this:
-
-```js
-import { createThumbor } from 'thumbor-client'
-```
-
-We can teach the browser where to locate the `thumbor-client` import by using Import Maps:
+Classic script, exposes the `ThumborClient` global:
 
 ```html
-<script type="importmap">
-  {
-    "imports": {
-      "thumbor-client": "https://unpkg.com/thumbor-client/dist/thumbor-client.js"
-    }
-  }
-</script>
-
-<script type="module">
-    import { createThumbor } from 'thumbor-client'
-
-    const thumbor = createThumbor({
-        url: 'https://your-thumbor.com',
-        key: 'secret'
-    })
-
-    const imgUrl = thumbor
-            .fromUrl('https://cataas.com/cat')
-            .smartCrop(true)
-            .resize(300, 200)
-            .buildURL()
-
-    console.log(imageUrl)
-    // https://your-thumbor.com/unsafe/300x200/smart/https://cataas.com/cat
+<script src="https://cdn.jsdelivr.net/npm/thumbor-client/dist/thumbor-client.iife.js"></script>
+<script>
+  const url = ThumborClient.createThumbor({ url: 'https://thumbor.example.com' })
+    .fromUrl('https://cataas.com/cat')
+    .resize(300, 200)
+    .buildURL()
 </script>
 ```
 
-## LICENSE
+Pin a version in production: `thumbor-client@0.2.0`.
+
+## Playground
+
+https://azabroflovski.github.io/thumbor-client/
+
+Builds urls and code for any Thumbor server. For previews, run one locally:
+
+```sh
+docker run -p 8888:8888 thumbororg/thumbor:7-py-3.12 -i 0.0.0.0
+```
+
+## Development
+
+Uses [Bun](https://bun.sh) locally. The published package does not depend on Bun.
+
+```sh
+bun install
+bun run test         # unit tests (vitest)
+bun run typecheck
+bun run build        # dist/: esm, cjs, iife, d.ts
+bun run test:smoke   # runs the built package in node (esm, cjs, iife)
+bun run dev          # playground
+bun run thumbor      # local thumbor on :8888, see compose.yaml
+bun run test:live    # requests every url type from the local thumbor
+```
+
+CI also runs the smoke tests in Bun and Deno, and `test:live` against Thumbor 7.
+
+## License
 
 MIT
-
-## Copyright
-
-&copy; 2023 azabroflovski

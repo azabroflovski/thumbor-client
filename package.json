@@ -1,53 +1,66 @@
 {
   "name": "thumbor-client",
-  "private": false,
-  "version": "0.1.0",
-  "type": "module",
+  "version": "0.2.0",
+  "description": "Thumbor URL builder for Node, Bun, Deno, edge runtimes and browsers",
+  "license": "MIT",
   "author": "azabroflovski",
   "homepage": "https://github.com/azabroflovski/thumbor-client",
   "bugs": {
     "url": "https://github.com/azabroflovski/thumbor-client/issues"
   },
   "repository": {
-    "url": "https://github.com/azabroflovski/thumbor-client",
+    "url": "git+https://github.com/azabroflovski/thumbor-client.git",
     "type": "git"
   },
   "keywords": [
     "thumbor",
-    "thumborjs",
-    "thumbor-node",
-    "node-thumbor",
     "thumbor-client",
-    "thumbor typescript",
-    "thumbor typescript client",
-    "thumbor browser",
-    "thumbor node",
-    "thumbor node typescript"
+    "image",
+    "resize",
+    "url",
+    "hmac",
+    "typescript"
   ],
+  "type": "module",
+  "sideEffects": false,
   "files": [
     "dist"
   ],
-  "types": "./dist/main.d.ts",
-  "main": "./dist/thumbor-client.umd.cjs",
+  "main": "./dist/thumbor-client.cjs",
   "module": "./dist/thumbor-client.js",
+  "types": "./dist/thumbor-client.d.ts",
+  "unpkg": "./dist/thumbor-client.iife.js",
+  "jsdelivr": "./dist/thumbor-client.iife.js",
   "exports": {
     ".": {
-      "types": "./dist/main.d.ts",
-      "import": "./dist/thumbor-client.js",
-      "require": "./dist/thumbor-client.umd.cjs"
-    }
+      "import": {
+        "types": "./dist/thumbor-client.d.ts",
+        "default": "./dist/thumbor-client.js"
+      },
+      "require": {
+        "types": "./dist/thumbor-client.d.cts",
+        "default": "./dist/thumbor-client.cjs"
+      }
+    },
+    "./package.json": "./package.json"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build && cp LICENSE dist",
-    "preview": "vite preview"
+    "dev": "vite demo",
+    "build": "tsdown",
+    "build:demo": "vite build demo",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:smoke": "node test/smoke.mjs && node test/smoke.cjs && node test/smoke-iife.cjs",
+    "test:live": "node test/live.mjs",
+    "thumbor": "docker compose up -d --wait",
+    "typecheck": "tsc && tsc -p tsconfig.test.json && tsc -p demo",
+    "release": "bun scripts/release.ts"
   },
   "devDependencies": {
-    "@types/node": "^20.12.2",
-    "typescript": "^5.2.2",
-    "vite-plugin-dts": "^3.8.1"
-  },
-  "dependencies": {
-    "vite": "^6.0.11"
+    "@types/node": "^24",
+    "tsdown": "^0.23.0",
+    "typescript": "^7",
+    "vite": "^8",
+    "vitest": "^5"
   }
 }

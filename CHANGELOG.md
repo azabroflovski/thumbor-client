@@ -1,129 +1,99 @@
 # Changelog
 
-## v0.0.7
+Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follow [semver](https://semver.org/).
 
-[compare changes](https://github.com/azabroflovski/thumbor-client/compare/v0.0.6...v0.0.7)
+## [Unreleased]
 
-### 🩹 Fixes
+## [0.2.0] - 2026-10-05
 
-- Make crypto external module ([719a7d9](https://github.com/azabroflovski/thumbor-client/commit/719a7d9))
+Generated urls change in some cases, see "Changed". Urls that worked before still work in Thumbor.
 
-### 📖 Documentation
+### Fixed
 
-- Improve usage examples (add cdn example) ([fa9f598](https://github.com/azabroflovski/thumbor-client/commit/fa9f598))
-- **readme:** Remove doube v letter ([4fc9c41](https://github.com/azabroflovski/thumbor-client/commit/4fc9c41))
-- **readme:** Reformat file ([72f166e](https://github.com/azabroflovski/thumbor-client/commit/72f166e))
+- `halign()` and `valign()` produced `LEFT`, `TOP` etc. Thumbor only accepts lowercase and returned an error for these urls.
+- `FitInType.ADAPTIVE` produced `adaptative-fit-in`, Thumbor expects `adaptive-fit-in`.
+- `FitInType`, `HorizontalPosition` and `VerticalPosition` were declared in types but missing from the JavaScript bundle, so importing them failed at runtime.
+- Signing with `key` did not work in browsers, Deno and edge runtimes because it required `node:crypto`. It now uses a built-in HMAC-SHA1. Signatures for the same url are unchanged.
+- The ES module build had a bare `import 'crypto'` and could not be loaded in a browser without a bundler.
+- `vite` was listed as a runtime dependency and installed together with the package.
 
-### 🏡 Chore
+### Changed
 
-- Migrate to bun (for dev) ([dde2717](https://github.com/azabroflovski/thumbor-client/commit/dde2717))
-- Update readme ([9b930cb](https://github.com/azabroflovski/thumbor-client/commit/9b930cb))
+- The `0x0` segment is no longer added when no size and no flip is set: `/unsafe/0x0/a.jpg` is now `/unsafe/a.jpg`. Signatures and cache keys for these urls change.
+- A trailing slash in the server url is removed: `https://host/` no longer produces `https://host//unsafe/...`.
+- Builder state is reset even if `buildURL()` throws.
 
-### 🎨 Styles
+### Added
 
-- Reformat code via linter ([68cacc2](https://github.com/azabroflovski/thumbor-client/commit/68cacc2))
+- `FitInType.ADAPTIVE_FULL` for `adaptive-full-fit-in`.
+- `Thumbor` class export.
+- `ThumborParameters` type.
+- `dist/thumbor-client.iife.js`, a minified build for `<script>` tags with the `ThumborClient` global. `unpkg` and `jsdelivr` fields point to it.
+- Separate type declarations for `require()` (`.d.cts`).
 
-### ❤️ Contributors
+### Deprecated
 
-- azabroflovski <azabroflovski@gmail.com>
+- `Parameters` type, use `ThumborParameters`. The old name shadows TypeScript's built-in `Parameters<T>`.
 
-## v0.0.6
+## [0.1.0] - 2025-06-24
 
-[compare changes](https://github.com/azabroflovski/thumbor-client/compare/v0.0.5...vv0.0.6)
+### Fixed
 
-### 🩹 Fixes
+- Signed urls. Up to 0.0.6 the build replaced `crypto` with an empty object and `buildURL()` threw `createHmac is not a function` whenever `key` was set. Now `crypto` is imported at runtime, which works in Node and Bun only.
 
-- **package:** Remove .ts from export (export not visible issue) ([0908103](https://github.com/azabroflovski/thumbor-client/commit/0908103))
+### Changed
 
-### ❤️ Contributors
+- `vite` was added to runtime dependencies by mistake (fixed in 0.2.0).
 
-- azabroflovski <azabroflovski@gmail.com>
+## [0.0.7] - 2025-01-25
 
-## v0.0.5
+Published without the `dist` folder and cannot be used.
 
-[compare changes](https://github.com/azabroflovski/thumbor-client/compare/v0.0.4...vv0.0.5)
+## [0.0.6] - 2024-04-04
 
-### 🏡 Chore
+### Fixed
 
-- Copy license file to dist (after build) ([4cd1a8b](https://github.com/azabroflovski/thumbor-client/commit/4cd1a8b))
+- Package `exports` pointed to `.ts` files.
 
-### ❤️ Contributors
+## [0.0.5] - 2024-04-04
 
-- azabroflovski <azabroflovski@gmail.com>
+### Added
 
-## v0.0.4
+- `LICENSE` is included in the package.
 
-[compare changes](https://github.com/azabroflovski/thumbor-client/compare/v0.0.3...v0.0.4)
+## [0.0.4] - 2024-04-03
 
-### 🩹 Fixes
+### Fixed
 
-- Types issue (after build) ([f2b12f1](https://github.com/azabroflovski/thumbor-client/commit/f2b12f1))
+- Type declarations after build.
 
-### 💅 Refactors
+### Removed
 
-- **main:** Do not expose helpers ([901dd5e](https://github.com/azabroflovski/thumbor-client/commit/901dd5e))
+- Internal helpers are no longer exported.
 
-### ❤️ Contributors
+## [0.0.3] - 2024-04-03
 
-- Azabroflovski <azabroflovski@gmail.com>
+### Fixed
 
-## v0.0.3
+- Type declarations were missing from the build.
 
-[compare changes](https://github.com/azabroflovski/thumbor-client/compare/v0.0.2...v0.0.3)
+## [0.0.2] - 2024-04-03
 
-### 🩹 Fixes
+### Added
 
-- Library building (types issue) ([b9f3fa4](https://github.com/azabroflovski/thumbor-client/commit/b9f3fa4))
+- Package metadata: keywords, repository links.
 
-### 📖 Documentation
+## [0.0.1] - 2024-04-03
 
-- **readme:** More readable console.log output (in exmample) ([fd28a61](https://github.com/azabroflovski/thumbor-client/commit/fd28a61))
+First release: `createThumbor()`, resize, fit-in, crop, flip, alignment, smart crop, trim, filters, unsafe urls. Signed urls did not work until 0.1.0.
 
-### ❤️ Contributors
-
-- Azabroflovski <azabroflovski@gmail.com>
-
-## v0.0.2
-
-[compare changes](https://github.com/azabroflovski/thumbor-client/compare/v0.0.1...v0.0.2)
-
-### 🏡 Chore
-
-- Add changelog ([8ef5840](https://github.com/azabroflovski/thumbor-client/commit/8ef5840))
-- **package:** Add keywords ([90e99fb](https://github.com/azabroflovski/thumbor-client/commit/90e99fb))
-- **package:** Add github information ([e1cb467](https://github.com/azabroflovski/thumbor-client/commit/e1cb467))
-
-### ❤️ Contributors
-
-- azabroflovski <azabroflovski@gmail.com>
-
-## v0.0.1
-
-### 🚀 Enhancements
-
-- Add helpers (f5a6261)
-- Thumbor client creating api and types, enums (84ea1f4)
-- Implement thumbor client (e66bd6d)
-- **thumbor:** Add fromUrl method (image processing from url) (41b1d96)
-
-### 💅 Refactors
-
-- **enums:** Add jsdoc comments (afa18b8)
-- **types:** Add jsdoc hints (6be3aa5)
-- **thumbor:** Add jsdoc hints and class access modifiers (f6c98ae)
-
-### 📖 Documentation
-
-- **readme:** Improve example usage code (cb80c66)
-
-### 🏡 Chore
-
-- Remove unused files (generated by vite) (e089868)
-- Make package public (for npm publishing) (e548780)
-- Add readme (09d8718)
-- Add license file (68f2e93)
-- Configure library mode (10a5e3d)
-
-### ❤️ Contributors
-
-- azabroflovski <azabroflovski@gmail.com>
+[Unreleased]: https://github.com/azabroflovski/thumbor-client/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/azabroflovski/thumbor-client/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/azabroflovski/thumbor-client/compare/v0.0.7...v0.1.0
+[0.0.7]: https://github.com/azabroflovski/thumbor-client/compare/v0.0.6...v0.0.7
+[0.0.6]: https://github.com/azabroflovski/thumbor-client/compare/v0.0.5...v0.0.6
+[0.0.5]: https://github.com/azabroflovski/thumbor-client/compare/v0.0.4...v0.0.5
+[0.0.4]: https://github.com/azabroflovski/thumbor-client/compare/v0.0.3...v0.0.4
+[0.0.3]: https://github.com/azabroflovski/thumbor-client/compare/v0.0.2...v0.0.3
+[0.0.2]: https://github.com/azabroflovski/thumbor-client/compare/v0.0.1...v0.0.2
+[0.0.1]: https://github.com/azabroflovski/thumbor-client/releases/tag/v0.0.1
