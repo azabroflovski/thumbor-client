@@ -1,4 +1,4 @@
-name: demo
+name: docs
 
 on:
   push:
@@ -22,11 +22,13 @@ jobs:
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # lastUpdated in vitepress reads git history
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
-      - run: bun run build:demo
+      - run: bun run docs:build
       - uses: actions/upload-pages-artifact@v5
         with:
-          path: demo/dist
+          path: docs/.vitepress/dist
       - id: deploy
         uses: actions/deploy-pages@v5

@@ -198,3 +198,16 @@ button {
 input:disabled {
   opacity: 0.5;
 }
+
+#json {
+  width: 100%;
+  max-height: 480px;
+  margin: 0;
+  overflow: auto;
+  font: 12px/1.5 var(--mono);
+  background: var(--bg);
+}
+
+select:disabled {
+  opacity: 0.5;
+}

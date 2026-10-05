@@ -2,6 +2,8 @@
 
 URL builder for [Thumbor](https://www.thumbor.org/). TypeScript, no dependencies, ~2 KB gzipped.
 
+Docs: https://azabroflovski.github.io/thumbor-client/ · Playground: https://azabroflovski.github.io/thumbor-client/playground/
+
 Works in Node, Bun, Deno, Cloudflare Workers and browsers. `buildURL()` is synchronous everywhere, signing included, so it can be called during SSR or in templates.
 
 ## Install
@@ -43,13 +45,12 @@ https://thumbor.example.com/unsafe/300x200/smart/https://cataas.com/cat
 ### Fit-in, filters
 
 ```ts
-import { createThumbor, FitInType } from 'thumbor-client'
+import { createThumbor, filters, FitInType } from 'thumbor-client'
 
 thumbor
   .setPath('photos/cat.jpg')
   .fitIn(800, 600, FitInType.FULL)
-  .filter('quality(80)')
-  .filter('format(webp)')
+  .filter(filters.quality(80), filters.format('webp'))
   .buildURL()
 // https://thumbor.example.com/unsafe/full-fit-in/800x600/filters:quality(80):format(webp)/photos/cat.jpg
 ```
@@ -73,7 +74,7 @@ thumbor
 
 | Method | Thumbor segment |
 |---|---|
-| `fromUrl(url)` | image url as is |
+| `fromUrl(url, { encode? })` | image url, `encode: true` for urls with a query string |
 | `setPath(path)` | image path, leading `/` removed |
 | `resize(width, height)` | `300x200`; `0` keeps proportions, `'orig'` keeps original size (Thumbor 7 returns 500 for `'orig'` combined with `0`) |
 | `fitIn(width, height, type?)` | `fit-in`, `full-fit-in`, `adaptive-fit-in`, `adaptive-full-fit-in` |
@@ -82,11 +83,11 @@ thumbor
 | `halign(HorizontalPosition)` | `left`, `center`, `right` |
 | `valign(VerticalPosition)` | `top`, `middle`, `bottom` |
 | `smartCrop(enabled = true)` | `smart` |
-| `trim()` | `trim` |
-| `filter(call)` | `filters:quality(80):...`, see [Thumbor filters](https://thumbor.readthedocs.io/en/latest/filters.html) |
+| `trim(orientation?, tolerance?)` | `trim`, `trim:bottom-right:10` |
+| `filter(...calls)` | `filters:quality(80):...`, use `filters.*` helpers or strings, see [Filters](https://azabroflovski.github.io/thumbor-client/guide/filters) |
+| `meta()` | `meta`, JSON instead of the image |
+| `debug()` | `debug`, draws focal points |
 | `buildURL()` | returns the url and resets the builder |
-
-Image urls are not encoded. If the source url has a query string, encode it yourself with `encodeURIComponent`.
 
 ## Security key in the browser
 
@@ -119,17 +120,7 @@ Classic script, exposes the `ThumborClient` global:
 </script>
 ```
 
-Pin a version in production: `thumbor-client@0.2.0`.
-
-## Playground
-
-https://azabroflovski.github.io/thumbor-client/
-
-Builds urls and code for any Thumbor server. For previews, run one locally:
-
-```sh
-docker run -p 8888:8888 thumbororg/thumbor:7-py-3.12 -i 0.0.0.0
-```
+Pin at least the minor version in production: `thumbor-client@0.3`.
 
 ## Development
 
@@ -142,6 +133,7 @@ bun run typecheck
 bun run build        # dist/: esm, cjs, iife, d.ts
 bun run test:smoke   # runs the built package in node (esm, cjs, iife)
 bun run dev          # playground
+bun run docs:dev     # docs site
 bun run thumbor      # local thumbor on :8888, see compose.yaml
 bun run test:live    # requests every url type from the local thumbor
 ```

@@ -11,6 +11,8 @@ bun run typecheck    # tsc for src, then tsconfig.test.json for tests
 bun run build        # tsdown -> dist/
 bun run test:smoke   # built package via its exports map: esm, cjs, iife, umd
 bun run dev          # demo/ playground on vite, imports from src/
+bun run docs:dev     # docs/ on vitepress
+bun run docs:build   # docs + playground into docs/.vitepress/dist (playground at /playground/)
 bun run thumbor      # local thumbor on :8888 (compose.yaml, thumbor.conf)
 bun run test:live    # built package against the local thumbor
 ```
@@ -24,14 +26,18 @@ Run `build` before `test:smoke` and `test:live`. CI runs smoke tests on Node 22/
 - `src/lib/sign.ts` - own sync HMAC-SHA1 + urlsafe base64 (with `=` padding, like Python's `urlsafe_b64encode`)
 - `src/lib/enums.ts`, `src/lib/types.ts`
 - `test/smoke*`, `test/live.mjs` - plain JS, run against `dist/` through the package name, not against `src/`
-- `demo/` - playground, deployed to GitHub Pages by `.github/workflows/demo.yml`
+- `src/lib/filters.ts` - `filters.*` helpers, signatures from thumbor/filters in Thumbor 7.8
+- `demo/` - playground, plain vite app; deployed together with the docs
+- `docs/` - vitepress site, deployed to GitHub Pages by `.github/workflows/docs.yml`
 - `tsdown.config.ts` - esm+cjs with d.ts/d.cts (platform neutral); minified iife and umd with global `ThumborClient`. The umd file name `thumbor-client.umd.cjs` is kept because 0.1.0 and earlier pointed `main` at it, so CDN links to it exist
 
 ## Constraints
 
 - No runtime dependencies. No Node or DOM APIs in `src/lib`: `tsconfig.json` has `lib: ES2020` and `types: []` to enforce it. Tests get Node types via `tsconfig.test.json`.
 - `buildURL()` must stay synchronous. That rules out WebCrypto, hence `sign.ts`.
-- Segment order follows Thumbor's URL regex: `trim / crop / fit-in / size / halign / valign / smart / filters / image`.
+- Segment order follows Thumbor's URL regex (libthumbor `Url.regex`): `debug / meta / trim / crop / fit-in / size / halign / valign / smart / filters / image`.
+- Thumbor ignores filters with arguments it can't parse and still returns 200. `test/live.mjs` therefore compares the image bytes with and without each filter. A new filter helper needs a case there.
+- Docs examples show real output. When behavior changes, update `docs/` in the same PR.
 - Thumbor expects lowercase `left|center|right`, `top|middle|bottom`, and `adaptive-` (not `adaptative-`).
 - Thumbor 7 returns 500 for `orig` combined with `0` (server bug, `float('orig')`). Not ours, don't "fix" it in the builder.
 - Signature changes break every signed URL in production. `sign.ts` is tested against `node:crypto`; keep that test.
