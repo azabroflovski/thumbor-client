@@ -4,6 +4,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-05
+
 ### Added
 
 - `thumbor.image(src, { encode? })`: immutable image builder. Every method returns a new object, so partly built images can be reused as presets.
@@ -110,7 +112,8 @@ Published without the `dist` folder and cannot be used.
 
 First release: `createThumbor()`, resize, fit-in, crop, flip, alignment, smart crop, trim, filters, unsafe urls. Signed urls did not work until 0.1.0.
 
-[Unreleased]: https://github.com/azabroflovski/thumbor-client/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/azabroflovski/thumbor-client/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/azabroflovski/thumbor-client/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/azabroflovski/thumbor-client/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/azabroflovski/thumbor-client/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/azabroflovski/thumbor-client/compare/v0.0.7...v0.1.0
