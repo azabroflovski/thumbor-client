@@ -4,7 +4,7 @@
   "description": "Thumbor URL builder for Node, Bun, Deno, edge runtimes and browsers",
   "license": "MIT",
   "author": "azabroflovski",
-  "homepage": "https://github.com/azabroflovski/thumbor-client",
+  "homepage": "https://thumbor-js.broflovski.dev",
   "bugs": {
     "url": "https://github.com/azabroflovski/thumbor-client/issues"
   },

@@ -3,9 +3,9 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: 'thumbor-client',
   description: 'Thumbor URL builder for Node, Bun, Deno, edge runtimes and browsers',
-  base: '/thumbor-client/',
   cleanUrls: true,
   lastUpdated: true,
+  sitemap: { hostname: 'https://thumbor-js.broflovski.dev' },
 
   themeConfig: {
     nav: [

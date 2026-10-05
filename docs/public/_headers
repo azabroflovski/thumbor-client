@@ -1,0 +1,6 @@
+# Cloudflare Pages headers. Files under assets/ have content hashes in their names.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/playground/assets/*
+  Cache-Control: public, max-age=31536000, immutable

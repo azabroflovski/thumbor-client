@@ -2,7 +2,7 @@
 
 URL builder for [Thumbor](https://www.thumbor.org/). TypeScript, no dependencies, ~2 KB gzipped.
 
-Docs: https://azabroflovski.github.io/thumbor-client/ · Playground: https://azabroflovski.github.io/thumbor-client/playground/
+Docs: https://thumbor-js.broflovski.dev · Playground: https://thumbor-js.broflovski.dev/playground/
 
 Works in Node, Bun, Deno, Cloudflare Workers and browsers. `buildURL()` is synchronous everywhere, signing included, so it can be called during SSR or in templates.
 
@@ -84,7 +84,7 @@ thumbor
 | `valign(VerticalPosition)` | `top`, `middle`, `bottom` |
 | `smartCrop(enabled = true)` | `smart` |
 | `trim(orientation?, tolerance?)` | `trim`, `trim:bottom-right:10` |
-| `filter(...calls)` | `filters:quality(80):...`, use `filters.*` helpers or strings, see [Filters](https://azabroflovski.github.io/thumbor-client/guide/filters) |
+| `filter(...calls)` | `filters:quality(80):...`, use `filters.*` helpers or strings, see [Filters](https://thumbor-js.broflovski.dev/guide/filters) |
 | `meta()` | `meta`, JSON instead of the image |
 | `debug()` | `debug`, draws focal points |
 | `buildURL()` | returns the url and resets the builder |

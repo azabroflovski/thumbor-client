@@ -28,7 +28,7 @@ Run `build` before `test:smoke` and `test:live`. CI runs smoke tests on Node 22/
 - `test/smoke*`, `test/live.mjs` - plain JS, run against `dist/` through the package name, not against `src/`
 - `src/lib/filters.ts` - `filters.*` helpers, signatures from thumbor/filters in Thumbor 7.8
 - `demo/` - playground, plain vite app; deployed together with the docs
-- `docs/` - vitepress site, deployed to GitHub Pages by `.github/workflows/docs.yml`
+- `docs/` - vitepress site at https://thumbor-js.broflovski.dev, deployed by Cloudflare Pages git integration (build: `bun run docs:build`, output: `docs/.vitepress/dist`). `docs/public/_headers` sets cache headers there
 - `tsdown.config.ts` - esm+cjs with d.ts/d.cts (platform neutral); minified iife and umd with global `ThumborClient`. The umd file name `thumbor-client.umd.cjs` is kept because 0.1.0 and earlier pointed `main` at it, so CDN links to it exist
 
 ## Constraints
