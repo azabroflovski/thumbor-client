@@ -45,11 +45,13 @@
     "./package.json": "./package.json"
   },
   "scripts": {
+    "dev": "vite demo",
     "build": "tsdown",
+    "build:demo": "vite build demo",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:smoke": "node test/smoke.mjs && node test/smoke.cjs && node test/smoke-iife.cjs",
-    "typecheck": "tsc && tsc -p tsconfig.test.json"
+    "typecheck": "tsc && tsc -p tsconfig.test.json && tsc -p demo"
   },
   "devDependencies": {
     "@types/node": "^24",
