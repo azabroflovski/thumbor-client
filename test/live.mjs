@@ -1,5 +1,5 @@
-// Requests urls from a running Thumbor server. Needs THUMBOR_URL and THUMBOR_KEY,
-// server config: SECURITY_KEY = THUMBOR_KEY, ALLOW_UNSAFE_URL = True.
+// Requests urls from a running Thumbor server: `bun run thumbor && bun run build && bun run test:live`.
+// Defaults match compose.yaml and thumbor.conf. Override with THUMBOR_URL and THUMBOR_KEY.
 import { createThumbor, FitInType, HorizontalPosition, VerticalPosition } from 'thumbor-client'
 
 const server = process.env.THUMBOR_URL ?? 'http://localhost:8888'

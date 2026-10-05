@@ -9,16 +9,13 @@ bun install
 bun run test         # vitest, src/**/*.test.ts
 bun run typecheck    # tsc for src, then tsconfig.test.json for tests
 bun run build        # tsdown -> dist/
-bun run test:smoke   # built package via its exports map: esm, cjs, iife
+bun run test:smoke   # built package via its exports map: esm, cjs, iife, umd
 bun run dev          # demo/ playground on vite, imports from src/
-node test/live.mjs   # against a running thumbor, config in test/thumbor.conf
+bun run thumbor      # local thumbor on :8888 (compose.yaml, thumbor.conf)
+bun run test:live    # built package against the local thumbor
 ```
 
-Run `build` before `test:smoke` and `test/live.mjs`. CI runs smoke tests on Node 22/24/26, Bun and Deno, and `test/live.mjs` against `thumbororg/thumbor:7` in Docker. Local server:
-
-```sh
-docker run -d -p 8888:8888 -v "$PWD/test/thumbor.conf:/conf/thumbor.conf:ro" thumbororg/thumbor:7-py-3.12 -c /conf/thumbor.conf -i 0.0.0.0 -p 8888
-```
+Run `build` before `test:smoke` and `test:live`. CI runs smoke tests on Node 22/24/26, Bun and Deno, and `test:live` against the same compose setup.
 
 ## Layout
 
@@ -28,7 +25,7 @@ docker run -d -p 8888:8888 -v "$PWD/test/thumbor.conf:/conf/thumbor.conf:ro" thu
 - `src/lib/enums.ts`, `src/lib/types.ts`
 - `test/smoke*`, `test/live.mjs` - plain JS, run against `dist/` through the package name, not against `src/`
 - `demo/` - playground, deployed to GitHub Pages by `.github/workflows/demo.yml`
-- `tsdown.config.ts` - two builds: esm+cjs with d.ts/d.cts (platform neutral), minified iife with global `ThumborClient`
+- `tsdown.config.ts` - esm+cjs with d.ts/d.cts (platform neutral); minified iife and umd with global `ThumborClient`. The umd file name `thumbor-client.umd.cjs` is kept because 0.1.0 and earlier pointed `main` at it, so CDN links to it exist
 
 ## Constraints
 

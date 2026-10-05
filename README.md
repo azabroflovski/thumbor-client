@@ -142,9 +142,11 @@ bun run typecheck
 bun run build        # dist/: esm, cjs, iife, d.ts
 bun run test:smoke   # runs the built package in node (esm, cjs, iife)
 bun run dev          # playground
+bun run thumbor      # local thumbor on :8888, see compose.yaml
+bun run test:live    # requests every url type from the local thumbor
 ```
 
-CI also runs the smoke tests in Bun and Deno, and checks every url type against a real Thumbor 7 in Docker (`test/live.mjs`).
+CI also runs the smoke tests in Bun and Deno, and `test:live` against Thumbor 7.
 
 ## License
 
