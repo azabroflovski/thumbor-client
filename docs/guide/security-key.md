@@ -11,7 +11,7 @@ Sign urls where the key is stored, send ready urls to the client:
 const thumbor = createThumbor({ url: process.env.THUMBOR_URL, key: process.env.THUMBOR_KEY })
 
 export function avatarUrl(src: string) {
-  return thumbor.fromUrl(src).resize(64, 64).smartCrop().buildURL()
+  return thumbor.image(src).resize(64, 64).smart().url()
 }
 ```
 

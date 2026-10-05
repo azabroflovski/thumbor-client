@@ -5,7 +5,7 @@
 Thumbor returns JSON instead of the image: source size, operations, target size, focal points.
 
 ```ts
-thumbor.setPath('cat.jpg').resize(300, 200).meta().buildURL()
+thumbor.image('cat.jpg').resize(300, 200).meta().url()
 // https://thumbor.example.com/unsafe/meta/300x200/cat.jpg
 ```
 
@@ -29,7 +29,7 @@ To fetch it from a browser on another origin, the server needs `ACCESS_CONTROL_A
 Thumbor draws the detected focal points on the image. Useful to see why smart crop picked an area.
 
 ```ts
-thumbor.setPath('cat.jpg').resize(300, 200).smartCrop().debug().buildURL()
+thumbor.image('cat.jpg').resize(300, 200).smart().debug().url()
 // https://thumbor.example.com/unsafe/debug/300x200/smart/cat.jpg
 ```
 

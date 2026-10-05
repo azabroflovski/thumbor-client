@@ -22,11 +22,13 @@ Run `build` before `test:smoke` and `test:live`. CI runs smoke tests on Node 22/
 ## Layout
 
 - `src/main.ts` - package entry, everything public is exported here
-- `src/lib/thumbor.ts` - builder class, URL segment order
+- `src/lib/thumbor.ts` - client: `image()` plus the deprecated mutable chain methods (keep them working, same urls as the new api)
+- `src/lib/image.ts` - `ThumborImage`, the immutable builder; filter methods are generated from `filters` on the prototype and typed with a mapped type
+- `src/lib/compose.ts` - the only place where urls are put together, used by both apis
 - `src/lib/sign.ts` - own sync HMAC-SHA1 + urlsafe base64 (with `=` padding, like Python's `urlsafe_b64encode`)
 - `src/lib/enums.ts`, `src/lib/types.ts`
 - `test/smoke*`, `test/live.mjs` - plain JS, run against `dist/` through the package name, not against `src/`
-- `src/lib/filters.ts` - `filters.*` helpers, signatures from thumbor/filters in Thumbor 7.8
+- `src/lib/filters.ts` - `filters.*` helpers, signatures from thumbor/filters in Thumbor 7.8. A new helper also becomes a `ThumborImage` method; `src/image.test.ts` fails until it has a sample
 - `demo/` - playground, plain vite app; deployed together with the docs
 - `docs/` - vitepress site at https://thumbor-js.broflovski.dev, deployed as a static-assets Worker (`wrangler.jsonc`) by Workers Builds on push to master. `docs/public/_headers` sets cache headers
 - `tsdown.config.ts` - esm+cjs with d.ts/d.cts (platform neutral); minified iife and umd with global `ThumborClient`. The umd file name `thumbor-client.umd.cjs` is kept because 0.1.0 and earlier pointed `main` at it, so CDN links to it exist
@@ -40,6 +42,7 @@ Run `build` before `test:smoke` and `test:live`. CI runs smoke tests on Node 22/
 - Docs examples show real output. When behavior changes, update `docs/` in the same PR.
 - Thumbor expects lowercase `left|center|right`, `top|middle|bottom`, and `adaptive-` (not `adaptative-`).
 - Thumbor 7 returns 500 for `orig` combined with `0` (server bug, `float('orig')`). Not ours, don't "fix" it in the builder.
+- The old and new api must produce identical urls, `src/image.test.ts` checks pairs. Don't remove the old methods before 2.0.
 - Signature changes break every signed URL in production. `sign.ts` is tested against `node:crypto`; keep that test.
 - Imports use `.ts` extensions and `import type` (`verbatimModuleSyntax`).
 

@@ -1,10 +1,10 @@
 # thumbor-client
 
-URL builder for [Thumbor](https://www.thumbor.org/). TypeScript, no dependencies, ~2 KB gzipped.
+URL builder for [Thumbor](https://www.thumbor.org/). TypeScript, no dependencies, ~3 KB gzipped.
 
 Docs: https://thumbor-js.broflovski.dev · Playground: https://thumbor-js.broflovski.dev/playground/
 
-Works in Node, Bun, Deno, Cloudflare Workers and browsers. `buildURL()` is synchronous everywhere, signing included, so it can be called during SSR or in templates.
+Works in Node, Bun, Deno, Cloudflare Workers and browsers. Urls are built synchronously everywhere, signing included, so it works during SSR and in templates.
 
 ## Install
 
@@ -26,68 +26,67 @@ const thumbor = createThumbor({
   key: 'secret' // optional, omit for unsafe urls
 })
 
-thumbor
-  .fromUrl('https://cataas.com/cat')
-  .resize(300, 200)
-  .smartCrop()
-  .buildURL()
-// https://thumbor.example.com/BHXj4E9HQX8RkVGdEhO1tua9QdI=/300x200/smart/https://cataas.com/cat
+thumbor.image('https://example.com/cat.jpg').resize(300, 200).smart().url()
+// https://thumbor.example.com/gFMdxP8CRDmNv4bUKISOyjubGds=/300x200/smart/https://example.com/cat.jpg
 ```
 
 Without `key` the url is unsafe:
 
 ```
-https://thumbor.example.com/unsafe/300x200/smart/https://cataas.com/cat
+https://thumbor.example.com/unsafe/300x200/smart/https://example.com/cat.jpg
 ```
 
-`buildURL()` resets the builder, so one client can be reused for many images.
+Every call returns a new object, so a partly built image works as a preset:
+
+```ts
+const avatar = (src: string) => thumbor.image(src).resize(64, 64).smart()
+
+avatar(user.photo).url()
+avatar(user.photo).format('webp').url()
+```
 
 ### Fit-in, filters
 
 ```ts
-import { createThumbor, filters, FitInType } from 'thumbor-client'
-
-thumbor
-  .setPath('photos/cat.jpg')
-  .fitIn(800, 600, FitInType.FULL)
-  .filter(filters.quality(80), filters.format('webp'))
-  .buildURL()
+thumbor.image('/photos/cat.jpg').fitIn(800, 600, { full: true }).quality(80).format('webp').url()
 // https://thumbor.example.com/unsafe/full-fit-in/800x600/filters:quality(80):format(webp)/photos/cat.jpg
 ```
 
-### Manual crop and alignment
+### Crop and alignment
 
 ```ts
-import { HorizontalPosition, VerticalPosition } from 'thumbor-client'
-
-thumbor
-  .setPath('photos/cat.jpg')
-  .crop({ left: 10, top: 20, right: 410, bottom: 320 })
-  .resize(200, 150)
-  .halign(HorizontalPosition.LEFT)
-  .valign(VerticalPosition.TOP)
-  .buildURL()
+thumbor.image('/photos/cat.jpg').crop({ left: 10, top: 20, right: 410, bottom: 320 }).resize(200, 150).align('left', 'top').url()
 // https://thumbor.example.com/unsafe/10x20:410x320/200x150/left/top/photos/cat.jpg
+```
+
+### srcset
+
+```ts
+thumbor.image('cat.jpg').fitIn(800, 600).srcset([400, 800, 1200])
+// .../fit-in/400x300/cat.jpg 400w, .../fit-in/800x600/cat.jpg 800w, .../fit-in/1200x900/cat.jpg 1200w
 ```
 
 ## API
 
+`thumbor.image(src, { encode? })` returns an immutable image:
+
 | Method | Thumbor segment |
 |---|---|
-| `fromUrl(url, { encode? })` | image url, `encode: true` for urls with a query string |
-| `setPath(path)` | image path, leading `/` removed |
-| `resize(width, height)` | `300x200`; `0` keeps proportions, `'orig'` keeps original size (Thumbor 7 returns 500 for `'orig'` combined with `0`) |
-| `fitIn(width, height, type?)` | `fit-in`, `full-fit-in`, `adaptive-fit-in`, `adaptive-full-fit-in` |
-| `flipHorizontally()` / `flipVertically()` | `-300x-200` |
+| `resize(width, height)` | `300x200`; `0` keeps proportions, `'orig'` keeps the original size |
+| `fitIn(width, height, { full?, adaptive? })` | `fit-in`, `full-fit-in`, `adaptive-fit-in`, `adaptive-full-fit-in` |
+| `flip('horizontal' \| 'vertical' \| 'both')` | `-300x-200` |
 | `crop({ left, top, right, bottom })` | `10x20:410x320` |
-| `halign(HorizontalPosition)` | `left`, `center`, `right` |
-| `valign(VerticalPosition)` | `top`, `middle`, `bottom` |
-| `smartCrop(enabled = true)` | `smart` |
+| `align(horizontal?, vertical?)` | `left/top` |
+| `smart()` | `smart` |
 | `trim(orientation?, tolerance?)` | `trim`, `trim:bottom-right:10` |
-| `filter(...calls)` | `filters:quality(80):...`, use `filters.*` helpers or strings, see [Filters](https://thumbor-js.broflovski.dev/guide/filters) |
 | `meta()` | `meta`, JSON instead of the image |
 | `debug()` | `debug`, draws focal points |
-| `buildURL()` | returns the url and resets the builder |
+| `quality(80)`, `format('webp')`, `blur(5)`, ... | one method per Thumbor filter, see [Filters](https://thumbor-js.broflovski.dev/guide/filters) |
+| `filter(...calls)` | any filter as a string |
+| `url()`, `toString()`, `toJSON()` | the url |
+| `srcset(widths)` | `url 400w, url 800w` |
+
+The API from 0.3 and earlier (`fromUrl`, `setPath`, ..., `buildURL()`) still works and is deprecated. See [Migrating](https://thumbor-js.broflovski.dev/guide/migration).
 
 ## Security key in the browser
 
@@ -102,9 +101,9 @@ ES module:
   import { createThumbor } from 'https://cdn.jsdelivr.net/npm/thumbor-client/dist/thumbor-client.js'
 
   const url = createThumbor({ url: 'https://thumbor.example.com' })
-    .fromUrl('https://cataas.com/cat')
+    .image('https://example.com/cat.jpg')
     .resize(300, 200)
-    .buildURL()
+    .url()
 </script>
 ```
 
@@ -114,13 +113,13 @@ Classic script, exposes the `ThumborClient` global:
 <script src="https://cdn.jsdelivr.net/npm/thumbor-client/dist/thumbor-client.iife.js"></script>
 <script>
   const url = ThumborClient.createThumbor({ url: 'https://thumbor.example.com' })
-    .fromUrl('https://cataas.com/cat')
+    .image('https://example.com/cat.jpg')
     .resize(300, 200)
-    .buildURL()
+    .url()
 </script>
 ```
 
-Pin at least the minor version in production: `thumbor-client@0.3`.
+Pin at least the minor version in production: `thumbor-client@0.4`.
 
 ## Development
 

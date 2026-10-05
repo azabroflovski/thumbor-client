@@ -4,6 +4,18 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 
 ## [Unreleased]
 
+### Added
+
+- `thumbor.image(src, { encode? })`: immutable image builder. Every method returns a new object, so partly built images can be reused as presets.
+- Methods: `resize`, `fitIn(w, h, { full, adaptive })`, `flip('horizontal' | 'vertical' | 'both')`, `crop`, `align(horizontal, vertical)`, `smart`, `trim`, `meta`, `debug`, `filter`, `url`.
+- A method for every filter helper: `.quality(80)`, `.format('webp')`, ... Same arguments as `filters.*`.
+- `srcset(widths)` returns a `srcset` value, height scales with the width.
+- `toString()` and `toJSON()` return the url, so an image works in template strings and serialized props.
+
+### Deprecated
+
+- The chain methods on the client: `fromUrl`, `setPath`, `resize`, `fitIn`, `flipHorizontally`, `flipVertically`, `crop`, `halign`, `valign`, `smartCrop`, `trim`, `meta`, `debug`, `filter`, `buildURL`, `defaultParameters`. They keep working and produce the same urls as the new API. Not removed before 2.0.
+
 ## [0.3.0] - 2026-10-05
 
 ### Added

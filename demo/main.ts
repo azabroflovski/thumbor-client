@@ -62,87 +62,85 @@ function filterCode(call: string) {
   return `filters.${helper}(${args.map(literal).join(', ')})`
 }
 
+const FIT_IN_OPTIONS: Record<string, string> = {
+  DEFAULT: '',
+  FULL: '{ full: true }',
+  ADAPTIVE: '{ adaptive: true }',
+  ADAPTIVE_FULL: '{ adaptive: true, full: true }'
+}
+
 function build(s: State) {
   const thumbor = createThumbor({ url: s.server, key: s.key || undefined })
   const lines: string[] = []
-  const isUrl = /^https?:\/\//.test(s.image)
 
-  if (isUrl) {
-    thumbor.fromUrl(s.image, { encode: s.encode })
-    lines.push(s.encode ? `.fromUrl(${quote(s.image)}, { encode: true })` : `.fromUrl(${quote(s.image)})`)
-  } else {
-    thumbor.setPath(s.image)
-    lines.push(`.setPath(${quote(s.image)})`)
-  }
+  let image = thumbor.image(s.image, { encode: s.encode })
+  const src = s.encode ? `${quote(s.image)}, { encode: true }` : quote(s.image)
 
   if (s.debug) {
-    thumbor.debug()
+    image = image.debug()
     lines.push('.debug()')
   }
   if (s.meta) {
-    thumbor.meta()
+    image = image.meta()
     lines.push('.meta()')
   }
   if (s.trim) {
     const orientation = s.trimOrientation || undefined
-    thumbor.trim(orientation, s.trimTolerance)
+    image = image.trim(orientation, s.trimTolerance)
     const args = s.trimTolerance !== undefined
       ? [orientation ? quote(orientation) : 'undefined', String(s.trimTolerance)]
       : orientation ? [quote(orientation)] : []
     lines.push(`.trim(${args.join(', ')})`)
   }
   if (s.manualCrop) {
-    thumbor.crop(s.crop)
+    image = image.crop(s.crop)
     lines.push(`.crop({ left: ${s.crop.left}, top: ${s.crop.top}, right: ${s.crop.right}, bottom: ${s.crop.bottom} })`)
   }
   if (s.fitIn) {
-    thumbor.fitIn(s.width, s.height, FitInType[s.fitIn])
-    lines.push(`.fitIn(${s.width}, ${s.height}, FitInType.${s.fitIn})`)
+    image = image.fitIn(s.width, s.height, FitInType[s.fitIn])
+    const options = FIT_IN_OPTIONS[s.fitIn]
+    lines.push(`.fitIn(${s.width}, ${s.height}${options ? ', ' + options : ''})`)
   } else if (s.width || s.height) {
-    thumbor.resize(s.width, s.height)
+    image = image.resize(s.width, s.height)
     lines.push(`.resize(${s.width}, ${s.height})`)
   }
-  if (s.flipH) {
-    thumbor.flipHorizontally()
-    lines.push('.flipHorizontally()')
+  if (s.flipH || s.flipV) {
+    const direction = s.flipH && s.flipV ? 'both' : s.flipH ? 'horizontal' : 'vertical'
+    image = image.flip(direction)
+    lines.push(`.flip('${direction}')`)
   }
-  if (s.flipV) {
-    thumbor.flipVertically()
-    lines.push('.flipVertically()')
-  }
-  if (s.halign) {
-    thumbor.halign(HorizontalPosition[s.halign])
-    lines.push(`.halign(HorizontalPosition.${s.halign})`)
-  }
-  if (s.valign) {
-    thumbor.valign(VerticalPosition[s.valign])
-    lines.push(`.valign(VerticalPosition.${s.valign})`)
+  if (s.halign || s.valign) {
+    const h = s.halign ? HorizontalPosition[s.halign] : undefined
+    const v = s.valign ? VerticalPosition[s.valign] : undefined
+    image = image.align(h, v)
+    lines.push(v ? `.align(${h ? quote(h) : 'undefined'}, ${quote(v)})` : `.align(${quote(h!)})`)
   }
   if (s.smart) {
-    thumbor.smartCrop()
-    lines.push('.smartCrop()')
+    image = image.smart()
+    lines.push('.smart()')
   }
   if (s.filters.length) {
-    thumbor.filter(...s.filters)
-    const calls = s.filters.map(filterCode)
-    lines.push(calls.length === 1 ? `.filter(${calls[0]})` : `.filter(\n    ${calls.join(',\n    ')}\n  )`)
+    image = image.filter(...s.filters)
+    for (const f of s.filters) {
+      const call = filterCode(f)
+      lines.push(call.startsWith('filters.') ? call.slice('filters'.length) : `.filter(${call})`)
+    }
   }
 
-  const url = thumbor.buildURL()
+  const url = image.url()
 
-  const usesHelpers = s.filters.some((f) => filterCode(f).startsWith('filters.'))
-  const enums = [usesHelpers && 'filters', s.fitIn && 'FitInType', s.halign && 'HorizontalPosition', s.valign && 'VerticalPosition'].filter(Boolean)
   const options = s.key
     ? `{\n  url: ${quote(s.server)},\n  key: process.env.THUMBOR_KEY\n}`
     : `{ url: ${quote(s.server)} }`
   const code = [
-    `import { ${['createThumbor', ...enums].join(', ')} } from 'thumbor-client'`,
+    `import { createThumbor } from 'thumbor-client'`,
     '',
     `const thumbor = createThumbor(${options})`,
     '',
     'const url = thumbor',
+    `  .image(${src})`,
     ...lines.map((l) => '  ' + l),
-    '  .buildURL()'
+    '  .url()'
   ].join('\n')
 
   return { url, code }

@@ -26,7 +26,8 @@ export default defineConfig({
           { text: 'Filters', link: '/guide/filters' },
           { text: 'Meta and debug', link: '/guide/meta-and-debug' },
           { text: 'Browser and SSR', link: '/guide/browser-and-ssr' },
-          { text: 'Security key', link: '/guide/security-key' }
+          { text: 'Security key', link: '/guide/security-key' },
+          { text: 'Migrating from buildURL()', link: '/guide/migration' }
         ]
       },
       { text: 'API reference', link: '/api' }
