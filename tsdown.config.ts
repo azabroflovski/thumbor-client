@@ -7,8 +7,7 @@ export default defineConfig([
     platform: 'neutral',
     target: 'es2020',
     dts: true,
-    sourcemap: true,
-    copy: ['LICENSE']
+    sourcemap: true
   },
   {
     // single file for <script> tags and CDNs
