@@ -75,7 +75,7 @@ thumbor
 |---|---|
 | `fromUrl(url)` | image url as is |
 | `setPath(path)` | image path, leading `/` removed |
-| `resize(width, height)` | `300x200`; `0` keeps proportions, `'orig'` keeps original size |
+| `resize(width, height)` | `300x200`; `0` keeps proportions, `'orig'` keeps original size (Thumbor 7 returns 500 for `'orig'` combined with `0`) |
 | `fitIn(width, height, type?)` | `fit-in`, `full-fit-in`, `adaptive-fit-in`, `adaptive-full-fit-in` |
 | `flipHorizontally()` / `flipVertically()` | `-300x-200` |
 | `crop({ left, top, right, bottom })` | `10x20:410x320` |
@@ -121,6 +121,16 @@ Classic script, exposes the `ThumborClient` global:
 
 Pin a version in production: `thumbor-client@0.1.1`.
 
+## Playground
+
+https://azabroflovski.github.io/thumbor-client/
+
+Builds urls and code for any Thumbor server. For previews, run one locally:
+
+```sh
+docker run -p 8888:8888 thumbororg/thumbor:7-py-3.12 -i 0.0.0.0
+```
+
 ## Development
 
 Uses [Bun](https://bun.sh) locally. The published package does not depend on Bun.
@@ -131,9 +141,10 @@ bun run test         # unit tests (vitest)
 bun run typecheck
 bun run build        # dist/: esm, cjs, iife, d.ts
 bun run test:smoke   # runs the built package in node (esm, cjs, iife)
+bun run dev          # playground
 ```
 
-CI also runs the smoke tests in Bun and Deno.
+CI also runs the smoke tests in Bun and Deno, and checks every url type against a real Thumbor 7 in Docker (`test/live.mjs`).
 
 ## License
 

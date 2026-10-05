@@ -10,9 +10,15 @@ bun run test         # vitest, src/**/*.test.ts
 bun run typecheck    # tsc for src, then tsconfig.test.json for tests
 bun run build        # tsdown -> dist/
 bun run test:smoke   # built package via its exports map: esm, cjs, iife
+bun run dev          # demo/ playground on vite, imports from src/
+node test/live.mjs   # against a running thumbor, config in test/thumbor.conf
 ```
 
-Run `build` before `test:smoke`. CI (`.github/workflows/ci.yml`) runs smoke tests on Node 22/24/26, Bun and Deno.
+Run `build` before `test:smoke` and `test/live.mjs`. CI runs smoke tests on Node 22/24/26, Bun and Deno, and `test/live.mjs` against `thumbororg/thumbor:7` in Docker. Local server:
+
+```sh
+docker run -d -p 8888:8888 -v "$PWD/test/thumbor.conf:/conf/thumbor.conf:ro" thumbororg/thumbor:7-py-3.12 -c /conf/thumbor.conf -i 0.0.0.0 -p 8888
+```
 
 ## Layout
 
@@ -20,7 +26,8 @@ Run `build` before `test:smoke`. CI (`.github/workflows/ci.yml`) runs smoke test
 - `src/lib/thumbor.ts` - builder class, URL segment order
 - `src/lib/sign.ts` - own sync HMAC-SHA1 + urlsafe base64 (with `=` padding, like Python's `urlsafe_b64encode`)
 - `src/lib/enums.ts`, `src/lib/types.ts`
-- `test/smoke*` - plain JS, run against `dist/`, not against `src/`
+- `test/smoke*`, `test/live.mjs` - plain JS, run against `dist/` through the package name, not against `src/`
+- `demo/` - playground, deployed to GitHub Pages by `.github/workflows/demo.yml`
 - `tsdown.config.ts` - two builds: esm+cjs with d.ts/d.cts (platform neutral), minified iife with global `ThumborClient`
 
 ## Constraints
@@ -29,6 +36,7 @@ Run `build` before `test:smoke`. CI (`.github/workflows/ci.yml`) runs smoke test
 - `buildURL()` must stay synchronous. That rules out WebCrypto, hence `sign.ts`.
 - Segment order follows Thumbor's URL regex: `trim / crop / fit-in / size / halign / valign / smart / filters / image`.
 - Thumbor expects lowercase `left|center|right`, `top|middle|bottom`, and `adaptive-` (not `adaptative-`).
+- Thumbor 7 returns 500 for `orig` combined with `0` (server bug, `float('orig')`). Not ours, don't "fix" it in the builder.
 - Signature changes break every signed URL in production. `sign.ts` is tested against `node:crypto`; keep that test.
 - Imports use `.ts` extensions and `import type` (`verbatimModuleSyntax`).
 
