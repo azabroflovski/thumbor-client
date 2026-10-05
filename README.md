@@ -119,7 +119,7 @@ Classic script, exposes the `ThumborClient` global:
 </script>
 ```
 
-Pin a version in production: `thumbor-client@0.1.1`.
+Pin a version in production: `thumbor-client@0.2.0`.
 
 ## Playground
 

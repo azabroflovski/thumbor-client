@@ -1,0 +1,39 @@
+name: release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+  id-token: write # npm trusted publishing and provenance
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - run: bun install --frozen-lockfile
+      - run: bun run typecheck
+      - run: bun run test
+      - run: bun run build
+      - run: bun run test:smoke
+      - run: docker compose up -d --wait && bun run test:live
+
+      - name: check tag matches package.json
+        run: test "v$(node -p 'require("./package.json").version')" = "$GITHUB_REF_NAME"
+
+      - run: npm publish --provenance --access public
+
+      - name: github release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          scripts/release-notes.sh "$version" > notes.md
+          gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes-file notes.md

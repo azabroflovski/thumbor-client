@@ -53,7 +53,8 @@
     "test:smoke": "node test/smoke.mjs && node test/smoke.cjs && node test/smoke-iife.cjs",
     "test:live": "node test/live.mjs",
     "thumbor": "docker compose up -d --wait",
-    "typecheck": "tsc && tsc -p tsconfig.test.json && tsc -p demo"
+    "typecheck": "tsc && tsc -p tsconfig.test.json && tsc -p demo",
+    "release": "bun scripts/release.ts"
   },
   "devDependencies": {
     "@types/node": "^24",

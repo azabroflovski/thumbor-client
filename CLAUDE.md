@@ -37,6 +37,14 @@ Run `build` before `test:smoke` and `test:live`. CI runs smoke tests on Node 22/
 - Signature changes break every signed URL in production. `sign.ts` is tested against `node:crypto`; keep that test.
 - Imports use `.ts` extensions and `import type` (`verbatimModuleSyntax`).
 
+## Changelog and releases
+
+- `CHANGELOG.md` follows Keep a Changelog. Every user-visible change gets a line under `## [Unreleased]` in the same commit or PR, in one of: Added, Changed, Deprecated, Removed, Fixed, Security.
+- Write what the user of the package sees, not what was done in the repo. Tooling, CI and refactoring don't go there unless they change the published package.
+- Anything that changes generated urls goes under Changed, even if it is a fix: it changes signatures and CDN cache keys.
+- Release: `bun run release <version>` (moves Unreleased, bumps package.json, commits, tags), then `git push --follow-tags`. `.github/workflows/release.yml` runs all checks, publishes to npm with provenance and creates the GitHub release from the changelog section.
+- Versions: patch for fixes that don't change urls, minor for new options or url changes while on 0.x.
+
 ## Style
 
 - Commits: conventional commits (`fix:`, `feat:`, `chore:`, `docs:`, `test:`, `ci:`), no co-author trailer.
