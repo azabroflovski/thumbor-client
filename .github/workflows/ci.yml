@@ -46,3 +46,22 @@ jobs:
       - name: deno
         if: matrix.node == 24
         run: deno run -A test/smoke.mjs
+
+  thumbor:
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - name: start thumbor
+        run: |
+          docker run -d -p 8888:8888 -v "$PWD/test/thumbor.conf:/conf/thumbor.conf:ro" \
+            thumbororg/thumbor:7-py-3.12 -c /conf/thumbor.conf -i 0.0.0.0 -p 8888
+          for i in $(seq 1 60); do curl -sf http://localhost:8888/healthcheck && break; sleep 1; done
+      - run: node test/live.mjs
