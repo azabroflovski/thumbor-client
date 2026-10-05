@@ -16,7 +16,12 @@ for (const file of ['thumbor-client.iife.js', 'thumbor-client.umd.cjs']) {
       .buildURL()
   `, ctx)
 
-  if (url !== expected) {
+  const imageUrl = vm.runInContext(`
+    ThumborClient.createThumbor({ url: 'https://t.example', key: 'MY_SECURE_KEY' })
+      .image('a.jpg').fitIn(300, 200, { adaptive: true }).align('left').url()
+  `, ctx)
+
+  if (url !== expected || imageUrl !== expected) {
     console.error(`${file}: got ${url}`)
     process.exit(1)
   }
